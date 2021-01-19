@@ -594,6 +594,7 @@ def createboard():
         #    name = 'x'.join( name.split('*') )
         #for dir headjson, banner error.
         name = tidyName(name)
+        name = name.replace(' ','_')#for options.value.
 
         #boardtype = request.form['boardtype']
         #heros = request.form['heros']2020.12.07.
@@ -1181,6 +1182,7 @@ def fetchlogin():
 def fetchnewuser():
     requestdict = request.get_json()
     username = requestdict['username']
+    username = username.replace(' ','_')#for options.value.
     sha = requestdict['sha']
     #print(username,sha)
     data = { 'bodytext' : userdb.newuser(username,sha) }
