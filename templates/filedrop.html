@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>file upload</title>
+    <style media="screen">
+
+#view_zone {
+max-width: 600px;
+border: 5px solid gold;
+display :flex;
+flex-wrap: wrap;
+align-content: flex-start;
+}
+#view_zone div {
+  width:  100px;
+  height: 100px;
+}
+#view_zone img {
+width:  100%;
+height: 100%;
+}
+#view_zone #drop_zone {
+border: 5px solid green;
+width:  90px;
+height: 90px;
+}
+#view_zone #trash_zone {
+border: 5px solid red;
+width:  90px;
+height: 90px;
+order: 999;
+}
+#view_zone .draghigh {
+  border: 5px solid red;
+  width:  90px;
+  height: 90px;
+}
+#view_zone .dragroot {
+  /*box-shadow: 0 0 0 3px #00f inset;*/
+  border: 5px solid blue;
+  width:  90px;
+  height: 90px;
+}
+#view_zone .clickroot {
+  /*box-shadow: 0 0 0 3px #00f inset;*/
+  border: 5px solid blue;
+  width:  90px;
+  height: 90px;
+}
+
+#fileElem {
+  display: none;
+}
+label.button {
+  display: inline-block;
+  padding: 10px;
+  background: #ccc;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+label.button:hover {
+  background: #ddd;
+}
+
+/*
+파일명이안보여서그냥비활성화함.
+#zipinput {
+  display: none;
+}
+label.button {
+  display: inline-block;
+  padding: 10px;
+  background: #ccc;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+label.button:hover {
+  background: #ddd;
+}
+*/
+
+
+
+
+@media screen and (max-width: 600px) {
+
+  #view_zone{
+    max-width: 300px;
+  }
+  h1{
+    font-size: small;
+  }
+
+  article{
+    max-width: 400px;
+    font-size: small;
+  }
+
+}
+
+    </style>
+  </head>
+  <body>
+
+    <div id = "loginbox">
+
+    </div>
+
+
+
+    <!------------------------------------------------------------------------->
+    <hr>
+
+    <h1>그냥글쓰기</h1>
+    <br>
+    <article class="">
+      이미지를 아래 영역에 끌어다 놓거나 파일을 선택하세요(각 20MB제한)
+      순서를바꾸려면 이미지를 클릭.
+    </article>
+
+    <div id="view_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+
+      <!--div id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+
+      </div-->
+
+      <div id="trash_zone" onclick="trashimg(event);">
+            클릭해서
+            삭제하기
+      </div>
+    </div>
+    <br>
+    <input type="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(event);">
+    <label class="button" for="fileElem">이미지파일선택</label>
+    <br>
+    <p>-----------------</p>
+
+
+    <select id = "writeboard" name="writeboard" >
+      {% for gallery in galleryList %}
+      <option value="{{gallery}}">{{gallery}}</option>
+      {% endfor %}
+    </select>
+    <br>
+    <br>
+
+    제목:<input type="text" name="titletext"  placeholder="최대30자,이미지없으면필수" maxlength="30"><br>
+      내용:<textarea name="bodytext" rows="5" cols="40"></textarea><br>
+      <!--input type="text" name="bodytext" ><br-->
+
+      <!--input type=file multiple name=charts accept="image/*"-->
+      <br>
+      <br>
+      <!--button id = "uploadbutton" type = "button" onclick="uploadFiles()">안보이는업로드버튼 </button-->
+      <button id = "submitbutton" type = "button" onclick="uploadFiles_pre()">눌러서 처리하기 </button>
+      <br>
+      <progress id="progress-img" max=100 value=0></progress>
+      이미지 파일:<span id = "filelen" >0</span><br>
+      업로드 시도:<span id = "filesdo" >0</span><br>
+      업로드 됨:<span id = "filesdone">0</span><br>
+      에러:<span id = "fileserr">0</span><br>
+
+
+
+
+      <!------------------------------------------------------------------------->
+      <hr>
+      <h1>zip파일업로드</h1>
+      <br>
+      <!--form method = "POST" action = "/zipfileup" enctype = "multipart/form-data"-->
+
+        <!--input type="radio" id="board" name="board" value="gallery">
+        <label for="board">보드명.변수입력이필요함.</label><br-->
+
+        <!--input type="radio" id="만화" name="boardtype" value="만화">
+        <label for="만화">만화</label><br>
+        <input type="radio" id="소설" name="boardtype" value="소설">
+        <label for="소설">소설</label><br-->
+
+        <select id = "zipboard" name="board" required>
+          <!--option value="">게시판</option-->
+          {% for gallery in galleryList %}
+          <option value="{{gallery}}">{{gallery}}</option>
+          {% endfor %}
+        </select>
+        <br>
+        <br>
+
+        <select id = "ziptype" name="ziptype" required>
+          <option value="">zip파일 종류</option>
+          <option value="단일만화">단일만화</option>
+          <option value="여러개묶음">여러개묶음</option>
+        </select>
+        <br>
+        <br>
+        <br>
+
+           zip파일:<input id = "zipinput" type = "file" name = "file" accept=".zip" >
+           <!--label class="button" for="zipinput">zip파일선택</label-->
+
+           <progress id="progress-bar" max=100 value=0></progress>
+           <br>
+           <br>
+           <button type = "button"  onclick="uploadzip_pre()">투고하기</button>
+           <br>
+
+      <article class="">
+        <p>단일만화 :흔한 만화 형태. zip파일명이 글제목으로 들어감.</p>
+        <p>여러개묶음 : zip파일 안에 폴더가 있는 형태. 각 폴더당 글 업로드가 됨. 글제목은 각 폴더 명.</p>
+        <p>여러개묶음 : zip 안의 txt,이미지 파일들이 있는 경우, 파일명 폴더가 생성되고, 개별 글로 업로드 됨.</p>
+        <p>본문 넣고 싶으면, 여러개묶음에서. 각 폴더 안에 텍스트파일을 단! 하나! 넣으면 됨.</p>
+        <p>처리 시간은, 대략 10메가당 30초. 100메가면, 300초,5분정도걸린다고보임.최대500mb.</p>
+        <br>
+        <h3>이하 zip파일종류 설명</h3>
+        <hr>
+        <img src="/static/resource/단일만화.jpg" alt="단일만화">
+        <h3>이러면 이미지 전체가 묶여서 하나의 글로 들어감.</h3>
+        <br>
+        <hr>
+        <img src="/static/resource/여러개묶음1.jpg" alt="여러개묶음1">
+        <h3>ㄴ이러면 각 폴더별로 글이 생성됨. 폴더명=글제목,그림파일(txt있으면생략가능)txt파일=본문(생략가능)</h3>
+        <br>
+        <hr>
+        <img src="/static/resource/여러개묶음2.jpg" alt="여러개묶음2">
+        <h3>ㄴ이러면 각 파일별로 글이 생성됨. 글 여러개 업로드 or 이미지 한 장으로 된 글을 만들고싶을때 유용하다.</h3>
+      </article>
+
+
+
+  </body>
+
+  <script type="text/javascript" src="/static/js/shasha.js"> </script>
+  <script type="text/javascript" src="/static/js/userfunc.js"> </script>
+  <script type="text/javascript">
+    frame = document.getElementById("loginbox")
+    makeloginbox(frame)
+  </script>
+
+  <script type="text/javascript">
+  var clicked=false
+  var filelist=[]
+  var upload_key = "x"
+
+  var loginmsg = "업로드 하려면 로그인을..!"
+  var writefillmsg = "이미지를 업로드 하거나, 내용을 채워주세요"
+  var selectfillmsg = "게시판 , zip파일 타입을 선택하세요"
+  var attachfilemsg = "zip파일을 첨부 하세요"
+  var over2gbmsg = "too large: 500MB"
+
+  var gallfillmsg = "게시판을 선택해주세요"
+
+    function dragOverHandler(ev) {
+  //console.log('File(s) in drop zone');
+  // Prevent default behavior (Prevent file from being opened)
+  ev.preventDefault();
+}
+
+//https://developer.mozilla.org/en-US/docs/Web/API/Document/drag_event
+
+document.addEventListener("dragover", function(event) {
+  // prevent default to allow drop
+  event.preventDefault();
+}, false);
+
+
+//------------------------zipfile upload button mapped.
+
+function logincheck(){
+  if(document.getElementById("sha").value == "로그인성공"){
+    return true
+  }
+  else{
+    alert(loginmsg)
+    return false
+  }
+}
+
+function zipfillcheck(){
+  let boardval = document.getElementById("zipboard").value
+  let typeval = document.getElementById("ziptype").value
+
+  if(boardval=="" || typeval==""){
+    alert(selectfillmsg)
+    return false
+  }
+  else{
+    return true
+  }
+}
+
+
+function zipattachcheck(){
+  let file = document.getElementById("zipinput").files[0]
+  if(file == undefined){
+    alert(attachfilemsg)
+    return false
+  }
+  else{
+    return true
+  }
+}
+
+
+function uploadzip_pre(event) {
+  if(logincheck()==false){return false}// escape if not logged in.
+  if(zipfillcheck()==false){return false}// escape if not logged in.
+  if(zipattachcheck()==false){return false}// escape if not logged in.
+
+  getupload_key(uploadzip)
+}
+
+
+function getupload_key(afterfunction){
+let token = getCookie('token')
+
+var url = '/uploadkey'
+var xhr = new XMLHttpRequest()
+var formData = new FormData()
+xhr.open('POST', url, true)// true means async.
+xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+
+xhr.addEventListener("load",  function(e){
+  parseupload_key(e)
+  if( upload_key !="" ){ afterfunction() }
+ })
+//xhr.addEventListener("load", function(e){  (e.srcElement.status==200 ? alert(e.srcElement.responseText) : alert("다시 시도하세요!") )  } )
+//data = { 'uploadkey': uploadkey, 'msg':msg }
+formData.append("token", token  )
+xhr.send(formData)
+}
+
+
+function parseupload_key(event){
+  let a = event.target.response
+  let b = JSON.parse(a)
+  let upload_msg = b["msg"]
+  if(upload_msg!=""){ alert(upload_msg) }
+  upload_key = b["uploadkey"]
+}
+
+
+
+function uploadzip() {
+  var url = '/zipfileup'
+  var xhr = new XMLHttpRequest()
+  var formData = new FormData()
+  xhr.open('POST', url, true)
+  xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+
+  //xhr.addEventListener("load", function(e){alert(e.srcElement.responseText)} )
+  xhr.addEventListener("load", function(e){  (e.srcElement.status==200 ? alert(e.srcElement.responseText) : upload_fail() )  } )
+
+  xhr.addEventListener("error", upload_fail )
+
+  xhr.upload.addEventListener("progress", function(e) {
+    let progressBar = document.getElementById('progress-bar')
+    progressBar.value = (e.loaded * 100.0 / e.total)
+  })
+  //console.log(i) //holy! is magic of foreach?
+
+  //formData.append('upload_preset', 'ujpu6gyk') //idonno whatis it
+
+  file = document.getElementById("zipinput").files[0]
+  zipsize = file.size/1024/1024
+  if( zipsize>500){
+    alert(over2gbmsg)
+    return ""
+  }
+
+  formData.append('file', file)
+
+  //username = document.getElementsByName('username')[0].value
+  //formData.append("username", username)
+  formData.append("upload_key", upload_key)
+
+  formData.append("board", document.getElementById("zipboard").value )
+  formData.append("ziptype", document.getElementById("ziptype").value  )
+  formData.append("zipsize", zipsize  )
+
+
+  xhr.send(formData)
+}
+
+
+
+
+//--------------------------------upload files.
+
+function gallfillcheck(){
+  let boardval = document.getElementById("writeboard").value
+
+  if(boardval=="" ){
+    alert(gallfillmsg)
+    return false
+  }
+  else{
+    return true
+  }
+}
+
+
+function uploadfilecheck(){
+  if(filelist.length == 0){
+    let tmptext = document.getElementsByName("bodytext")[0].value
+    if(tmptext == ""){
+      alert(writefillmsg)
+      return false
+    }
+  }
+return true
+}
+
+function uploadFiles_pre(event) {
+  if(logincheck()==false){return false}
+  if(gallfillcheck()==false){return false}// escape if not gallfill.
+  if(uploadfilecheck()==false){return false}// escape if not logged in.
+
+
+  getupload_key(uploadFiles)
+}
+
+
+function uploadFiles() {
+  cleartry()
+  filelist.forEach(uploadFile)
+  if(filelist.length == 0){
+    uploadtext()
+  }
+}
+
+
+function uploadFile(file, i) {
+  var url = '/xmliterimg'
+  var xhr = new XMLHttpRequest()
+  var formData = new FormData()
+  xhr.open('POST', url, true)
+  xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+  xhr.addEventListener("loadstart", filetry )
+  xhr.addEventListener("load", function(e){  (e.srcElement.responseText=="imgup" ? filedone() : fileerr() )  } )
+  xhr.addEventListener("load", function(e){  (e.srcElement.responseText=="imgup" ? fileallcheck() : false )  } )
+  //xhr.addEventListener("load", function(e){  (e.srcElement.status==200 ? filedone() : fileerr() )  } )
+  //xhr.addEventListener("load", function(e){  (e.srcElement.status==200 ? fileallcheck() : false )  } )
+  xhr.addEventListener("error", fileerr )
+  //console.log(i) //holy! is magic of foreach?
+
+  xhr.upload.addEventListener("progress", function(e) {
+    let progressBar = document.getElementById('progress-img')
+    progressBar.value = (e.loaded * 100.0 / e.total)
+  })
+
+
+  //formData.append('upload_preset', 'ujpu6gyk') //idonno whatis it
+  formData.append('iter', i+1)
+  formData.append('file', file)
+
+  //username = document.getElementsByName('username')[0].value
+  //formData.append("username", username)
+  formData.append("upload_key", upload_key)
+  titletext = document.getElementsByName('titletext')[0].value
+  formData.append("titletext", titletext)
+
+  xhr.send(formData)
+}
+
+
+function uploadtext() {
+  var url = '/xmltext'
+  var xhr = new XMLHttpRequest()
+  var formData = new FormData()
+  xhr.open('POST', url, true)
+  xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+  //xhr.addEventListener("load", function(e){alert(e.srcElement.responseText)} )
+
+  //xhr.addEventListener("load", function(e){  (e.srcElement.status==200 ? upload_success() : upload_fail() )  } )
+  //xhr.addEventListener("load", function(e){  (e.srcElement.responseText=="txtup" ? upload_success() : upload_fail() )  } )
+  xhr.addEventListener("load", function(e){  (e.srcElement.status==200 ? alert(e.srcElement.responseText) : upload_fail() )  } )
+
+  //xhr.addEventListener("load", upload_success)
+  xhr.addEventListener("error", upload_fail)
+
+  formData.append("upload_key", upload_key)
+  //username = document.getElementsByName('username')[0].value
+  //formData.append("username", username)
+  titletext = document.getElementsByName('titletext')[0].value
+  formData.append("titletext", titletext)
+  bodytext = document.getElementsByName('bodytext')[0].value
+  formData.append("bodytext", bodytext)
+  /*herotext = document.getElementsByName('herotext')[0].value
+  formData.append("herotext", herotext)
+  tagtext = document.getElementsByName('tagtext')[0].value
+  formData.append("tagtext", tagtext)*/
+
+  board = document.getElementById('writeboard').value
+  formData.append("board", board)
+
+  xhr.send(formData)
+}
+
+
+//------------------after each file upload
+function cleartry(){
+  document.getElementById("filesdo").innerText=0
+  document.getElementById("filesdone").innerText=0
+  document.getElementById("fileserr").innerText=0
+}
+
+function filetry() {
+  let filespan = document.getElementById("filesdo")
+  filespan.innerText = parseInt(filespan.innerText)+1
+}
+function filedone() {
+  let filespan = document.getElementById("filesdone")
+  filespan.innerText = parseInt(filespan.innerText)+1
+}
+function fileerr() {
+  let filespan = document.getElementById("fileserr")
+  filespan.innerText = parseInt(filespan.innerText)+1
+}
+
+function fileallcheck() {
+  let filespan = document.getElementById("filesdone")
+  if( filelist.length == parseInt(filespan.innerText) ){
+    uploadtext()
+  }
+}
+
+
+function upload_success(){
+  alert('upload done!')
+}
+
+function upload_fail(e) {
+ alert('upload fail!')
+}
+
+
+function fileheavycheck(file) {
+  return file.size/1024/1024 <20
+}
+
+function fileextcheck(file) {
+  return ["image/jpeg","image/gif","image/png","image/bmp","image/webp"].includes( file.type )
+}
+
+
+
+//------------------------file upload or drop
+
+function handleFiles(event) {
+  files = event.srcElement.files//yeah i did it
+  files = [...files]
+  files.forEach(previewFile)
+}
+
+function dropHandler(event) {
+// Prevent default behavior (Prevent file from being opened)
+event.preventDefault();
+files = event.dataTransfer.files
+files = [...files]
+//files.forEach(uploadFile) //after orderswap.
+files.forEach(previewFile)
+}
+
+function updateimglen() {
+  document.getElementById("filelen").innerText = filelist.length
+}
+
+function previewFile(file,i) {
+  if(fileextcheck(file) == false){return "not img file"}
+  if(fileheavycheck(file) == false){return "too heavy file"}
+
+  filelist.push(file)
+  updateimglen()
+
+  let reader = new FileReader()
+  reader.readAsDataURL(file)
+  //imgidx = i+document.getElementsByClassName('imgrect').length
+  imgidx = document.getElementsByClassName('imgrect').length
+
+  let div = document.createElement('div')
+  div.className = "imgrect"
+  div.id = imgidx
+  //div.style.order = imgidx
+  div.addEventListener('click', imgdrag_click)
+  document.getElementById('view_zone').appendChild(div)
+  reader.onloadend = function() {
+    let img = document.createElement('img')
+    img.src = reader.result
+    img.alt = file.name
+    img.title = file.name
+    div.appendChild(img)
+  }
+}
+
+
+function trashimg(event) {
+  if (clicked == true){
+    clicked = false
+    let idxnow = document.getElementsByClassName('clickroot')[0].id
+    filelist.splice(idxnow, 1); //exctract from, numbers.
+    updateimglen()
+
+    document.getElementById(idxnow).remove()//remains 1,2, 4.
+    let rectlist = document.getElementsByClassName('imgrect')
+    //[...rectlist].forEach( function(r,i){console.log(i)})//how clever!
+    Object([...rectlist]).forEach( function(r,i){ r.id=i })
+  }
+}
+
+
+//------------------img change place
+
+  function imgdrag_click(event) {
+    if (clicked == false){
+      clicked = true
+      idxroot =  event.currentTarget.id
+      event.currentTarget.classList.add("clickroot")
+    }
+    else{
+      clicked = false
+      idxtarget =  event.currentTarget.id
+      document.getElementsByClassName('clickroot')[0].classList.remove('clickroot')
+      swapimg(idxroot,idxtarget)
+    }
+
+  }
+
+  function imgdrag_start(event) {
+    idxroot =  event.currentTarget.id
+    event.currentTarget.classList.add("dragroot")
+  }
+  function imgdrag_end(event) {
+    event.currentTarget.classList.remove("dragroot")
+    //console.log(idxroot)
+    //console.log(idxtarget)
+    swapimg(idxroot,idxtarget)
+  }
+  function imgdrag_enter(event) {
+    event.currentTarget.classList.add("draghigh")
+    idxtarget =  event.currentTarget.id
+  }
+  function imgdrag_leave(event) {
+    event.currentTarget.classList.remove("draghigh")
+  }
+
+  function imgdrag_drop(event) {
+    event.preventDefault();
+    console.log('aerhaerhwer')
+    console.log( event.currentTarget.id )
+  }
+
+function swapimg(idx1,idx2) {
+  let a = filelist[idx1]
+  let b = filelist[idx2]
+  filelist[idx1]=b
+  filelist[idx2]=a
+
+  //fastest! no speed loss.
+  let d1 = document.getElementById(idx1)
+  let d2 = document.getElementById(idx2)
+  let i1 = document.getElementById(idx1).firstChild
+  let i2 = document.getElementById(idx2).firstChild
+  let tempdiv = document.createElement("div")
+  //let c2 = document.getElementById(idx2).firstChild.cloneNode()
+  tempdiv.appendChild(i1)
+  tempdiv.appendChild(i2)
+  d1.appendChild(i2)
+  d2.appendChild(i1)
+  tempdiv.remove()
+
+  //v2
+  // let d1 = document.getElementById(idx1)
+  // let d2 = document.getElementById(idx2)
+  // let i1 = document.getElementById(idx1).firstChild
+  // let i2 = document.getElementById(idx2).firstChild
+  // let c1 = document.getElementById(idx1).firstChild.cloneNode()
+  // //let c2 = document.getElementById(idx2).firstChild.cloneNode()
+  // if (d1 != d2){
+  //   i1.replaceWith(i2)
+  //   d2.appendChild(c1)
+  // }
+
+  //v1
+  // let c1 = document.getElementById(idx1).firstChild.cloneNode()
+  // let c2 = document.getElementById(idx2).firstChild.cloneNode()
+  // i1.replaceWith(c2)
+  // i2.replaceWith(c1)
+
+  /*let s1 = document.getElementById(idx1).firstChild.src
+  let s2 = document.getElementById(idx2).firstChild.src
+  document.getElementById(idx1).firstChild.src = s2
+  document.getElementById(idx2).firstChild.src = s1*/ //slow
+}
+
+
+
+
+
+//
+// function previewFile(file,i) {
+//   filelist.push(file)
+//   let reader = new FileReader()
+//   reader.readAsDataURL(file)
+//   reader.onloadend = function() {
+//     let div = document.createElement('div')
+//     div.className = "imgrect"
+//     div.id = i
+//     //div.setAttribute("style", "order: i".replce("i",i) )
+//     //elt.style.cssText = "color: blue; border: 1px solid black";
+//     div.style.order = i
+//
+//     div.addEventListener('click', imgdrag_click)
+//
+//     //works only pc, but click for simple.
+//     //div.addEventListener('dragstart', imgdrag_start)
+//     //div.addEventListener('dragend', imgdrag_end)
+//     //div.addEventListener('dragenter', imgdrag_enter)
+//     //div.addEventListener('dragleave', imgdrag_leave)
+//
+//     //div.addEventListener('drag', imgdrag_drop)
+//     //div.addEventListener('dragover', imgdrag_drop)//noisy
+//     //div.addEventListener('drop', imgdrag_drop) //nowwork
+//     let img = document.createElement('img')
+//     img.src = reader.result
+//     div.appendChild(img)
+//     document.getElementById('view_zone').appendChild(div)
+//   }
+//
+// }
+
+  </script>
+</html>

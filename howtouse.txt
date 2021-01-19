@@ -1,0 +1,43 @@
+pip virtualenv
+
+cmd, run activate in Scripts or bin.
+
+pip install flask
+pip install image
+pip install waitress
+or
+pip install -r requirements.txt
+
+cmd-activate-py
+
+import waitress_server
+처음 id=마스터 pw=볼
+
+linux
+make --.sh
+cd fladir
+python3 waitress_server.py
+
+
+/opt/vc/bin/vcgencmd measure_temp
+shift cv to paste
+
+rpi usage
+
+cd ..
+dir
+cd Desktop/flawait
+python3 waitress_server.py
+
+sudo apt-get install fonts-unfonts-core
+to see korean
+
+bash can run .sh file..but permission need.fine.
+/opt/vc/bin/vcgencmd measure_temp
+sleep 3
+works fine.
+
+
+temp.
+/opt/vc/bin/vcgencmd measure_temp
+sleep 3
