@@ -37,6 +37,10 @@ def newuser(username,sha):
         user[username] = { "sha" : shasha(sha+salt) ,"token":shasha(username+tsalt), "salt" : salt , }
         tokens[ user[username]["token"] ] = username
         backup()
+        #for 1st.
+        if len(user)==1:
+            masters.append(username)
+            managers.append(username)
         return 'new account!'
     else:
         return 'username already exist..'
@@ -77,6 +81,7 @@ managers = []
 def newmaster(username):
     if username in user and username not in masters:
         masters.append(username)
+        managers.append(username)
         backup()
         return "greeting new master:{}".format(username)
     else:
