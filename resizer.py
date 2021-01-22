@@ -3,6 +3,7 @@
 #..think better list[0,1,2].. changed.
 #...no. list(3) cant find what it is. dict can by key.
 #...no. cant remember.. but 0,1,2 is origin, resized, thumb. too clear.
+from natsort import natsorted # pip install natsort
 
 from os import listdir, mkdir, rename, remove
 from os.path import isdir, join, splitext
@@ -25,6 +26,7 @@ def resizeDir( targetDir, resizew=720,thumbw=300 ,imgname = None):
     errlist=[]
 
     indir = listdir( targetDir )
+    #indir.sort()
     imgList = []
     for f in indir:
         if isdir( join(targetDir, f) ):
@@ -32,7 +34,7 @@ def resizeDir( targetDir, resizew=720,thumbw=300 ,imgname = None):
         ext = splitext( f )[1].lower()
         if ext in imgExt:     #now, it's img.
             imgList.append(f)
-
+    imgList = natsorted(imgList)#for 1.jpg 11.jpg 2.jpg.
     #imgList=[]..
 
     # break below. no img, no dirs!

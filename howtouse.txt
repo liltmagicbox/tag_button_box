@@ -1,7 +1,12 @@
 pip virtualenv
 
+virtualenv venv
+
 cmd, run activate in Scripts or bin.
 
+move all files to scripts, same activate.
+
+pip install natsort
 pip install flask
 pip install image
 pip install waitress
@@ -9,6 +14,8 @@ or
 pip install -r requirements.txt
 
 cmd-activate-py
+
+리눅스면 sudo나 pip3로 해야겠다.
 
 import waitress_server
 처음 id=마스터 pw=볼

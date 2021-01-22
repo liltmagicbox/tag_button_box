@@ -355,7 +355,7 @@ from werkzeug.utils import secure_filename
 @app.route('/upload', methods=['GET'])
 def render_file():
     boardname = request.args.get('boardname')
-    print(boardname)
+    #print(boardname)
     galleryList = [boardname]
     return render_template('filedrop.html', galleryList = galleryList )
 
@@ -486,7 +486,7 @@ def xmliterimg():
     # pointer gose end, cant save img!
     blob = f.read()
     fsize = len(blob)
-    print(fsize)
+    #print(fsize)
     if fsize < 25014825:#25MB,8digits.
         f.seek(0)
     iter = request.form['iter']

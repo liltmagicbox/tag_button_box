@@ -102,7 +102,6 @@ def getJar(preventSet={}):
     for i in listdir(jar_dir):
         if isdir(  join(jar_dir,i) ):
             dirList.append(i)
-
     if len(dirList) == 0:
         errlist.append( "{}:{}".format( datestr(),msgemptyjar) )
 
@@ -116,6 +115,7 @@ def getJar(preventSet={}):
             indir = listdir( noDir )
             if len(indir)==0:#not to occur resizer empty err.
                 raise Exception(erremptydir + str(noFolder))
+            
             for f in indir:
                 fdir = join(noDir,f)
                 if isdir( fdir ):

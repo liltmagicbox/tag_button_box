@@ -130,7 +130,7 @@ function makebigThrebar(tagFrame){
   tagB.className = 'bigThrebar'
   tagB.id = 'bigThrebar'
   tagB.min = "0"
-  tagB.max = "20"
+  tagB.max = "50"
   tagB.setAttribute('value',10)
   //value jnot working
   //tagB.oninput = 'getNewbigguy(this.value)'
