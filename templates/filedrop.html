@@ -275,8 +275,15 @@ function logincheck(){
     return true
   }
   else{
-    alert(loginmsg)
-    return false
+    var board = getParameterByName('boardname')//for @ anym upload
+    if(board.indexOf('@')==0){return true}
+    else{
+      alert(loginmsg)
+      return false
+    }
+    //익명
+    //alert(loginmsg)
+    //return false
   }
 }
 
@@ -331,6 +338,8 @@ xhr.addEventListener("load",  function(e){
 //xhr.addEventListener("load", function(e){  (e.srcElement.status==200 ? alert(e.srcElement.responseText) : alert("다시 시도하세요!") )  } )
 //data = { 'uploadkey': uploadkey, 'msg':msg }
 formData.append("token", token  )
+var board = getParameterByName('boardname')//for @ anym upload
+formData.append("board", board  )
 xhr.send(formData)
 }
 

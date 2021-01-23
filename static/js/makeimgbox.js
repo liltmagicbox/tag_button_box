@@ -796,7 +796,8 @@ function xmlcommsend(no,board,text,comminput){
 
   xhr.addEventListener("load", function(event){
     let response = event.srcElement.responseText
-    if( response == "noname"){alert("로그인 하세요!")}
+    //if( response == "noname"){alert("로그인 하세요!!")}
+
     //if( response == "value1"){likeB.value="1"; likeB.innerText="추천함";}
     //if( response == "value0"){likeB.value="0"; likeB.innerText="추천";}
     if( response == "done" ){

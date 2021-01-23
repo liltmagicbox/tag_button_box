@@ -327,10 +327,17 @@ def getuploadkey(username):
 def uploadkey():
     if request.method == 'POST':
         token = request.form['token']
+        board = request.form['board']
 
         username = userdb.getname(token)
         if username == "noname":
-            abort(403)#403 Forbidden
+            #abort(403)#403 Forbidden
+            #익명
+            if board.find('@') == 0:
+                1
+            else:
+                abort(403)#403 Forbidden
+
         #---jar auth.
         uploadkey = getuploadkey(username)
         if uploadkey == "":
@@ -1204,7 +1211,10 @@ def xmlrecomlike():
     token = request.form['token']
     username = userdb.getname(token)
     if username == "noname":
-        return str(len(newdb.db[board][id][dbkey]))
+        #return str(len(newdb.db[board][id][dbkey]))
+        #익명
+        1
+        username = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)        
         #return "noname"
     time = datestr()
     # if newdb.press_recom( board, id, time, username) == 1:
@@ -1234,7 +1244,11 @@ def xmlcomm():
     token = request.form['token']
     username = userdb.getname(token)
     if username == "noname":
-        return "noname"
+        #return "noname"
+        1
+        #익명
+
+    #print(request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
 
     time = datestr()
     key = newdb.comm_key
@@ -1262,8 +1276,8 @@ def xmldelcomm():
         return "noname"
 
     writer = newdb.db[board][id][newdb.comm_key][idx][newdb.user_key]
-    print(username)
-    print(writer)
+    #print(username)
+    #print(writer)
     if username != writer:
         if userdb.ismanager(username) or userdb.ismaster(username):
             pass
