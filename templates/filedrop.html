@@ -118,7 +118,7 @@ label.button:hover {
     <h1>그냥글쓰기</h1>
     <br>
     <article class="">
-      이미지를 아래 영역에 끌어다 놓거나 파일을 선택하세요(각 20MB제한)
+      이미지를 아래 영역에 끌어다 놓거나 파일을 선택하세요(각 25MB제한)
       순서를바꾸려면 이미지를 클릭.
     </article>
 
@@ -168,7 +168,7 @@ label.button:hover {
 
 
       <!------------------------------------------------------------------------->
-      <div class="" style="display: none;" id='zipbox'>
+      <div class="" style="display: initial;" id='zipbox'>
 
 
       <hr>
@@ -216,8 +216,9 @@ label.button:hover {
         <p>여러개묶음 : zip파일 안에 폴더가 있는 형태. 각 폴더당 글 업로드가 됨. 글제목은 각 폴더 명.</p>
         <p>여러개묶음 : zip 안의 txt,이미지 파일들이 있는 경우, 파일명 폴더가 생성되고, 개별 글로 업로드 됨.</p>
         <p>본문 넣고 싶으면, 여러개묶음에서. 각 폴더 안에 텍스트파일을 단! 하나! 넣으면 됨.</p>
-        <p>처리 시간은, 대략 10메가당 30초. 100메가면, 300초,5분정도걸린다고보임.최대500mb.</p>
-        <p>처리 누른 후 최대한 얌전히 버려두면 완료 메세지가 옵니다..</p>
+        <p>처리 시간은, 대략 10메가당 30초. 최대50mb.</p>
+        <p>처리 누른 후 최대한 얌전히 버려 두면 완료 메세지가 옵니다..</p>
+        <p id='hellostranger'></p>
         <br>
         <h3>이하 zip파일종류 설명</h3>
         <hr>
@@ -253,6 +254,7 @@ label.button:hover {
   var writefillmsg = "이미지를 업로드 하거나, 내용을 채워주세요"
   var selectfillmsg = "게시판 , zip파일 타입을 선택하세요"
   var attachfilemsg = "zip파일을 첨부 하세요"
+  var over100mbmsg = "too large: 50MB"
   var over2gbmsg = "too large: 500MB"
 
   var gallfillmsg = "게시판을 선택해주세요"
@@ -335,7 +337,6 @@ xhr.open('POST', url, true)// true means async.
 xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
 
 xhr.addEventListener("load",  function(e){
-  console.log(e)
   parseupload_key(e)
   if( upload_key !="" ){ afterfunction() }
  })
@@ -357,7 +358,7 @@ function parseupload_key(event){
 }
 
 
-
+ziplimit=55
 function uploadzip() {
   var url = '/zipfileup'
   var xhr = new XMLHttpRequest()
@@ -380,8 +381,8 @@ function uploadzip() {
 
   file = document.getElementById("zipinput").files[0]
   zipsize = file.size/1024/1024
-  if( zipsize>500){
-    alert(over2gbmsg)
+  if( zipsize>ziplimit){
+    alert(over100mbmsg)
     return ""
   }
 
@@ -560,7 +561,7 @@ function imgextcheck(file) {
   return ["image/jpeg","image/gif","image/png","image/bmp","image/webp"].includes( file.type )
 }
 function videoextcheck(file) {
-  return ['video/mp4','video/mkv'].includes( file.type )
+  return ['video/mp4','video/mkv'].includes( file.type )//mkv no.
 }
 
 
@@ -590,8 +591,7 @@ function previewFile(file,i) {
   if(imgextcheck(file) == false && videoextcheck(file) == false){console.log("not img/vid file!");return "not img/vid file!"}//msg cant see
 
   if(imgextcheck(file) == true && fileheavycheck(file,20) == false){console.log("too heavy image:");return "too heavy image:20MB"}
-  if(videoextcheck(file) == true && fileheavycheck(file,4500) == false){alert("too heavy video:4GB");return "too heavy video:4GB"}
-
+  if(videoextcheck(file) == true && fileheavycheck(file,500) == false){alert("too heavy video:500MB");return "too heavy video:.5GB"}
   filelist.push(file)
   updateimglen()
 
@@ -670,7 +670,6 @@ function trashimg(event) {
 
   function imgdrag_drop(event) {
     event.preventDefault();
-    console.log('aerhaerhwer')
     console.log( event.currentTarget.id )
   }
 
@@ -753,27 +752,31 @@ function swapimg(idx1,idx2) {
 //
 // }
 
-logincounter = 0
-//-----after login show more
-  function filltoken(){
-  //username = document.getElementById("username")
-  let token = getCookie("token")
-  if (token == ""){
-    console.log('no token. get again after 1s..')
-    logincounter+=1
-    if(logincounter>2){return 1}
-  setTimeout("filltoken()", 500)
-  }
+// logincounter = 0
+// //-----after login show more
+//   function filltoken(){
+//   //username = document.getElementById("username")
+//   let token = getCookie("token")
+//   if (token == ""){
+//     console.log('no token. get again after 1s..')
+//     logincounter+=1
+//     if(logincounter>2){return 1}
+//   setTimeout("filltoken()", 500)
+//   }
+//
+//   else{
+//     ziplimit = 500//if logged in, 500mb.
+//   //var zipbox = document.getElementById("zipbox")
+//   //zipbox.style="display: initial;"
+//   }
+//
+//   }
+//   filltoken()
 
-  else{
-  let userbox = document.getElementById("token")
-  userbox.value = token
-  var zipbox = document.getElementById("zipbox")
-  zipbox.style="display: initial;"
-  }
-
-  }
-  filltoken()
-
+if(getCookie("userlevel")=="manager"){
+  var p = document.getElementById('hellostranger')
+  p.innerText = "관리자는500mb. 100메가당 5분정도걸린다고보임."
+  ziplimit=500
+}
   </script>
 </html>

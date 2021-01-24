@@ -385,7 +385,7 @@ def zipfileup():
 
         if not board in newdb.db.keys():
             abort(403)#403 Forbidden
-        if float(zipsize)>2000:
+        if float(zipsize)>600:
             abort(403)#403 Forbidden
 
 
@@ -402,13 +402,14 @@ def zipfileup():
             fname = splitext(sname)[0]
             unzipdir = join(jar_dir,fname)
             mkdir( unzipdir)
-        if ziptype == "여러개묶음":#novels, imgs, crawl
+        elif ziptype == "여러개묶음":#novels, imgs, crawl
             unzipdir = jar_dir
+
 
         filepath = join(unzipdir,sname)
         f.save( filepath )
         size = getsize( filepath )//1024//1024#xMB.
-        if size>2000:
+        if size>500:
             remove(filepath)# need log here.
             abort(403)#403 Forbidden
 
@@ -491,15 +492,13 @@ def xmliterimg():
     f = request.files['file']
     #js cuts 20MB, but if 100MB comes, can't block!
     # pointer gose end, cant save img!
-    blob = f.read()
-    fsize = len(blob)
-    print(fsize)
-    if 'mp4' in f.filename or 'mkv' in f.filename:
-        print('mp4 mkv')
-        f.seek(0)
+    if 'mp4' in f.filename:
+        1
     else:
+        blob = f.read()
+        fsize = len(blob)
         if fsize < 25014825:#25MB,8digits.
-            print('not video but smallsize')
+            #print('not video but smallsize')
             f.seek(0)
     iter = request.form['iter']
     #print(f)
