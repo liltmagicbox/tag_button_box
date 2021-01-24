@@ -493,9 +493,14 @@ def xmliterimg():
     # pointer gose end, cant save img!
     blob = f.read()
     fsize = len(blob)
-    #print(fsize)
-    if fsize < 25014825:#25MB,8digits.
+    print(fsize)
+    if 'mp4' in f.filename or 'mkv' in f.filename:
+        print('mp4 mkv')
         f.seek(0)
+    else:
+        if fsize < 25014825:#25MB,8digits.
+            print('not video but smallsize')
+            f.seek(0)
     iter = request.form['iter']
     #print(f)
     #print(iter)

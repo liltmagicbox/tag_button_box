@@ -335,6 +335,7 @@ xhr.open('POST', url, true)// true means async.
 xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
 
 xhr.addEventListener("load",  function(e){
+  console.log(e)
   parseupload_key(e)
   if( upload_key !="" ){ afterfunction() }
  })
@@ -586,10 +587,10 @@ function updateimglen() {
 }
 
 function previewFile(file,i) {
-  if(imgextcheck(file) == false && videoextcheck(file) == false){return "not img/vid file!"}//msg cant see
+  if(imgextcheck(file) == false && videoextcheck(file) == false){console.log("not img/vid file!");return "not img/vid file!"}//msg cant see
 
-  if(imgextcheck(file) == true && fileheavycheck(file,20) == false){return "too heavy image:20MB"}
-  if(videoextcheck(file) == true && fileheavycheck(file,2000) == false){return "too heavy video:2GB"}
+  if(imgextcheck(file) == true && fileheavycheck(file,20) == false){console.log("too heavy image:");return "too heavy image:20MB"}
+  if(videoextcheck(file) == true && fileheavycheck(file,4500) == false){alert("too heavy video:4GB");return "too heavy video:4GB"}
 
   filelist.push(file)
   updateimglen()
@@ -608,7 +609,7 @@ function previewFile(file,i) {
   document.getElementById('view_zone').appendChild(div)
   reader.onloadend = function() {
     let img = document.createElement('img')
-    
+
     img.src = reader.result
     img.alt = file.name
     img.title = file.name
@@ -752,13 +753,16 @@ function swapimg(idx1,idx2) {
 //
 // }
 
+logincounter = 0
 //-----after login show more
   function filltoken(){
   //username = document.getElementById("username")
   let token = getCookie("token")
   if (token == ""){
     console.log('no token. get again after 1s..')
-  setTimeout("filltoken()", 1000)
+    logincounter+=1
+    if(logincounter>2){return 1}
+  setTimeout("filltoken()", 500)
   }
 
   else{
@@ -769,6 +773,7 @@ function swapimg(idx1,idx2) {
   }
 
   }
+  filltoken()
 
   </script>
 </html>
