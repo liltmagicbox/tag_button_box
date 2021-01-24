@@ -362,7 +362,7 @@ function eventBodyload(event){
   let imlist = datas[no]['리사이즈']
 
   if(imlist.length !=0){
-  let resizePath = './static/imgtower/'+no+'/resized/'
+  let resizePath = '/static/imgtower/'+no+'/resized/'
   //imlist.shift()//for 1 already..
 
   let imList = []//
@@ -385,6 +385,25 @@ function eventBodyload(event){
   window.scroll(0, scrollYbeforeloadbody )
   }
   window.scroll(0, scrollYbeforeloadbody )
+  }
+
+  //video
+  if( datas[no]['비디오'] != undefined ){
+
+    for(var video of datas[no]['비디오'] ){
+    let videoview = document.createElement('video')
+    videoview.setAttribute('width','100%')
+    //videoview.height = 270
+    videoview.controls = true
+
+    let videosource = document.createElement('source')
+    videosource.src = '/static/imgtower/'+no+"/"+video
+    videosource.type = "video/mp4"
+    videoview.appendChild(videosource)
+
+    console.log(videoview)
+    imgArea.appendChild(videoview)
+    }
   }
 
 

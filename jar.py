@@ -11,6 +11,7 @@ import file2dir
 import txt2dict
 from resizer import resizeDir
 
+
 #from newdb import parseKeys, imgKeys,  jar_dir, errlog_dir, imgtower_dir , jarerrname
 #id_key, title_key, writer_key, date_key, body_key = parseKeys
 #multiLineKey = body_key#for txt2dict
@@ -37,10 +38,13 @@ imgKeys = [originkey,resizedkey,thumbkey]
 
 multiLineKey = body_key#for txt2dict
 
+video_key = '비디오'
 #----------------------- user funcion variable
 
 maxMB=20# >20MB, del.
-safeext = {'.jpg','.jpeg','.png','.gif','.webp','.bmp','.txt', '.jfif'}
+safeext = {'.jpg','.jpeg','.png','.gif','.webp','.bmp','.txt', '.jfif','.mp4','.mkv'}
+videoext = {'.mp4','.mkv'}
+
 
 msgemptyjar = 'empty jar_dir'
 msgdirdir = "dir in dir.. deleted dir."
@@ -115,7 +119,7 @@ def getJar(preventSet={}):
             indir = listdir( noDir )
             if len(indir)==0:#not to occur resizer empty err.
                 raise Exception(erremptydir + str(noFolder))
-            
+
             for f in indir:
                 fdir = join(noDir,f)
                 if isdir( fdir ):
@@ -127,7 +131,7 @@ def getJar(preventSet={}):
                     remove( fdir )
                     errlist.append( "{}:,{},{}".format(datestr(),fdir,msgnotsafe) )
                     continue
-                elif getsize(fdir)//1024//1024 > maxMB:
+                if ext.lower() not in videoext and getsize(fdir)//1024//1024 > maxMB:
                     remove( fdir )
                     errlist.append( "{}:,{},{}".format(datestr(),fdir,msgtoolarge) )
 
@@ -157,7 +161,15 @@ def getJar(preventSet={}):
             #----------------- txt file parser
 
 
+            #------------------video attached.!
+            vidfiles = []
+            for f in listdir( noDir ):
+                name,ext = splitext(f)
+                if ext.lower() in videoext:
+                    vidfiles.append(f)
+            parsedDict[video_key] = vidfiles
 
+            #------------------video attached.!
 
             #resizer. create imgs, get imglist.
             resizedlist, elist = resizeDir(noDir,imgname = parsedDict[id_key] )#0 origin 1 re 2 thumb.

@@ -1,4 +1,4 @@
-from jar import parseKeys, imgKeys
+from jar import parseKeys, imgKeys, video_key
 
 id_key, title_key, writer_key, date_key, body_key = parseKeys
 originkey,resizedkey,thumbkey = imgKeys
@@ -256,7 +256,7 @@ from jsonio import *
 # headdatekey = "D"
 # headimgkey = "IM"
 # headthumbkey = "TH"
-
+headvideokey = video_key
 headidkey = id_key
 headtitlekey = title_key
 headdatekey = date_key
@@ -310,6 +310,8 @@ def scan_head(board):
     for id in db[board]:
         tmpdict = {}
         #tmpdict[headidkey] = k
+        if db[board][id].get(video_key)!=None:
+            tmpdict[headvideokey] = db[board][id][video_key]#video
         tmpdict[headtitlekey] = db[board][id][title_key]
         tmpdict[headdatekey] = db[board][id][date_key]
         tmpdict[headimgkey] =[]
