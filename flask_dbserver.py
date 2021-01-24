@@ -364,7 +364,7 @@ def render_file():
     boardname = request.args.get('boardname')
     #print(boardname)
     galleryList = [boardname]
-    return render_template('filedrop.html', galleryList = galleryList )
+    return render_template('filedrop.html', galleryList = galleryList)
 
 # @app.route('/smallupload')
 # def render_file_small():
@@ -1214,7 +1214,7 @@ def xmlrecomlike():
         #return str(len(newdb.db[board][id][dbkey]))
         #익명
         1
-        username = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)        
+        username = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         #return "noname"
     time = datestr()
     # if newdb.press_recom( board, id, time, username) == 1:

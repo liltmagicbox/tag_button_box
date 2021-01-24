@@ -14,8 +14,8 @@ flex-wrap: wrap;
 align-content: flex-start;
 }
 #view_zone div {
-  width:  100px;
-  height: 100px;
+  width:  150px;
+  height: 150px;
 }
 #view_zone img {
 width:  100%;
@@ -23,31 +23,31 @@ height: 100%;
 }
 #view_zone #drop_zone {
 border: 5px solid green;
-width:  90px;
-height: 90px;
+width:  140px;
+height: 140px;
 }
 #view_zone #trash_zone {
 border: 5px solid red;
-width:  90px;
-height: 90px;
+width:  140px;
+height: 140px;
 order: 999;
 }
 #view_zone .draghigh {
   border: 5px solid red;
-  width:  90px;
-  height: 90px;
+  width:  140px;
+  height: 140px;
 }
 #view_zone .dragroot {
   /*box-shadow: 0 0 0 3px #00f inset;*/
   border: 5px solid blue;
-  width:  90px;
-  height: 90px;
+  width:  140px;
+  height: 140px;
 }
 #view_zone .clickroot {
   /*box-shadow: 0 0 0 3px #00f inset;*/
   border: 5px solid blue;
-  width:  90px;
-  height: 90px;
+  width:  140px;
+  height: 140px;
 }
 
 #fileElem {
@@ -168,6 +168,9 @@ label.button:hover {
 
 
       <!------------------------------------------------------------------------->
+      <div class="" style="display: none;" id='zipbox'>
+
+
       <hr>
       <h1>고급용-zip파일업로드</h1>
       <br>
@@ -230,7 +233,7 @@ label.button:hover {
         <h3>여러개)ㄴ이러면 각 파일별로 글이 생성됨. 글 여러개 업로드 or 이미지 한 장으로 된 글을 만들고싶을때 유용하다.</h3>
       </article>
 
-
+      </div>
 
   </body>
 
@@ -548,12 +551,15 @@ function upload_fail(e) {
 }
 
 
-function fileheavycheck(file) {
-  return file.size/1024/1024 <20
+function fileheavycheck(file,mb) {//20MB..
+  return file.size/1024/1024 <mb
 }
 
-function fileextcheck(file) {
+function imgextcheck(file) {
   return ["image/jpeg","image/gif","image/png","image/bmp","image/webp"].includes( file.type )
+}
+function videoextcheck(file) {
+  return ['video/mp4','video/mkv'].includes( file.type )
 }
 
 
@@ -580,8 +586,10 @@ function updateimglen() {
 }
 
 function previewFile(file,i) {
-  if(fileextcheck(file) == false){return "not img file"}
-  if(fileheavycheck(file) == false){return "too heavy file"}
+  if(imgextcheck(file) == false && videoextcheck(file) == false){return "not img/vid file!"}//msg cant see
+
+  if(imgextcheck(file) == true && fileheavycheck(file,20) == false){return "too heavy image:20MB"}
+  if(videoextcheck(file) == true && fileheavycheck(file,2000) == false){return "too heavy video:2GB"}
 
   filelist.push(file)
   updateimglen()
@@ -591,6 +599,7 @@ function previewFile(file,i) {
   //imgidx = i+document.getElementsByClassName('imgrect').length
   imgidx = document.getElementsByClassName('imgrect').length
 
+
   let div = document.createElement('div')
   div.className = "imgrect"
   div.id = imgidx
@@ -599,6 +608,7 @@ function previewFile(file,i) {
   document.getElementById('view_zone').appendChild(div)
   reader.onloadend = function() {
     let img = document.createElement('img')
+    
     img.src = reader.result
     img.alt = file.name
     img.title = file.name
@@ -741,6 +751,24 @@ function swapimg(idx1,idx2) {
 //   }
 //
 // }
+
+//-----after login show more
+  function filltoken(){
+  //username = document.getElementById("username")
+  let token = getCookie("token")
+  if (token == ""){
+    console.log('no token. get again after 1s..')
+  setTimeout("filltoken()", 1000)
+  }
+
+  else{
+  let userbox = document.getElementById("token")
+  userbox.value = token
+  var zipbox = document.getElementById("zipbox")
+  zipbox.style="display: initial;"
+  }
+
+  }
 
   </script>
 </html>
