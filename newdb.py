@@ -123,7 +123,7 @@ def newboard(name):
 
 boardorder=[]
 sitename = 'site'
-announce = 'ann'
+description = 'description'
 keywords = 'keyword'
 def backup():
     #saveJson(db,"db.json")
@@ -132,7 +132,7 @@ def backup():
     tmp ={
     "boardorder" : boardorder,
     "sitename" : sitename,
-    "announce" : announce,
+    "description" : description,
     "keywords" : keywords,
     "unitC":unitC,"charC":charC,
     "artistList":artistList,"characterList":characterList,
@@ -163,10 +163,10 @@ def backdown():
     unitC = data["unitC"]
 
     global sitename
-    global announce
+    global description
     global keywords
     sitename = data["sitename"]
-    announce = data["announce"]
+    description = data["description"]
     keywords = data["keywords"]
     global boardorder
     boardorder = data["boardorder"]

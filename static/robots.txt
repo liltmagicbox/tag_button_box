@@ -1,0 +1,11 @@
+# Group 1
+User-agent: Googlebot
+Disallow: /
+Allow: /view
+
+# Group 2
+User-agent: *
+Disallow: /
+Allow: /view
+
+Sitemap: /sitemap.xml

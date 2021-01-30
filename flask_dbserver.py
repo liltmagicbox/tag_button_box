@@ -27,6 +27,37 @@ def hello():
     #return redirect( "/view?board="+boardList[0] )
     #return 'hello'
 
+
+
+@app.route('/robots.txt', methods=['GET', 'POST'])
+def robots():
+    return send_file( filename_or_fp = './static/robots.txt' )
+@app.route('/sitemap.xml', methods=['GET', 'POST'])
+def sitemap():
+    #return send_file( filename_or_fp = './static/sitemap.xml' )
+    realboardlist=[]
+    boardList = list(newdb.db.keys())
+    for board in boardList:
+        if board[0]!= '!':
+            realboardlist.append(board)
+
+    items = []
+    for board in realboardlist:
+        for id in newdb.db[board].keys():
+            title = newdb.db[board][id][newdb.title_key]
+            link = "/view?board={}&boxid={}".format(board,id)
+            desc = newdb.db[board][id][newdb.body_key]
+            date = newdb.db[board][id][newdb.date_key]
+            guid = link
+            item = {"title":title,"link":link,"desc":desc,"date":date,"guid":guid}
+            items.append(item)
+
+    title = newdb.sitename
+    description = newdb.description
+    link = "/"
+    return render_template('sitemap.xml',items=items, title=title, description=description,link=link)
+
+
 def getboardlist():
     boardList = list(newdb.db.keys())
     def listorder(k):
@@ -82,11 +113,13 @@ def viewmain():
         unitDict = newdb.unitDict[board]
 
         sitename = newdb.sitename
-        announce = newdb.announce
+        description = newdb.description
         keywords = newdb.keywords
+        if boxid != "no":
+            sitename = newdb.db[board][boxid][newdb.title_key]
     return render_template('rocketbox.html',
     sitename =sitename,
-    announce =announce,
+    description =description,
     keywords =keywords,
     boardList=boardList, board = board, headver = headver,
     hiddenboardList=hiddenboardList, allwriter=allwriter,
@@ -623,10 +656,10 @@ def xmltext():
 @app.route('/allnewboard', methods=['GET', 'POST'])
 def allnewboard():
     sitename = newdb.sitename
-    announce = newdb.announce
+    description = newdb.description
     keywords = newdb.keywords
     tagauthval = userdb.tagauthval
-    return render_template('allnewboard.html', sitename=sitename,announce=announce,keywords=keywords,tagauthval=tagauthval)
+    return render_template('allnewboard.html', sitename=sitename,description=description,keywords=keywords,tagauthval=tagauthval)
 
 @app.route('/tagauth', methods=['GET', 'POST'])
 def tagauth():
@@ -662,7 +695,7 @@ def createsite():
             return "noauth"
 
         newdb.sitename = request.form['sitename']
-        newdb.announce = request.form['announce']
+        newdb.description = request.form['description']
         newdb.keywords = request.form['keywords']
         newdb.backup()
         return 'well done!'
@@ -1532,6 +1565,12 @@ def likeview():
                     idList.append( id )
         return jsonify(idList)
 
+
+# @app.route('/backup')
+# def backup():
+#     newdb.backup()
+#     return "yeah"
+
 @app.route('/backupdown', methods=['POST',"GET"])
 def backupdown():
     zipfiledir = join('static',"backupzip")
@@ -1639,10 +1678,7 @@ def getPlotCSV():
         headers={"Content-disposition":
                  "attachment; filename=myplot.csv"})
 
-@app.route('/backup')
-def backup():
-    newdb.backup()
-    return "yeah"
+
 
 def backupcheck():
     tnow = intsec()
@@ -1653,6 +1689,7 @@ def backupcheck():
 def xmlbackup():
     newdb.lastbackuptime = intsec()
     newdb.backup()
+
 
 if __name__ == "__main__":
     app.run(debug = True, host='0.0.0.0' , port = '12800')
