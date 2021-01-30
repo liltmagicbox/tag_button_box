@@ -216,6 +216,9 @@ function overLayview(){
   overviewer.width = window.innerWidth
   overviewer.height = window.innerHeight
   overviewer.addEventListener('click',overoff )
+  //for mobile back button.
+  history.pushState(null, document.title, location.href)
+  window.addEventListener('popstate', function(event) { overviewer.remove() } )
   //document.body.append
   document.body.appendChild(overviewer)
   //box.appendChild(overviewer)
