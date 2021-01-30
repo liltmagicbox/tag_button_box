@@ -27,18 +27,38 @@ def hello():
     #return redirect( "/view?board="+boardList[0] )
     #return 'hello'
 
+def getboardlist():
+    boardList = list(newdb.db.keys())
+    def listorder(k):
+        target = newdb.boardorder
+        if k in target:
+            return target.index(k)
+        else:
+            return -1
+    return sorted( boardList, key= listorder, reverse = True)
 
 @app.route('/view')
 def viewmain():
     backupcheck()
     if request.method == "GET":
         board = request.args.get('board')
-        #print(board)works great!!!
-        boardList = list(newdb.db.keys())
 
+        boxid = request.args.get('boxid')
+        if boxid == None:
+            boxid = "no"
+        #print(board)works great!!!
+        #boardList = list(newdb.db.keys())
+        boardList = getboardlist()
+
+        #------if initial
+        if len(userdb.user)==0:
+            return redirect( "/allnewboard" )
+        #------if no board..
         if len(boardList)==0:
             return redirect( "/newboard" )
 
+
+        #-------------! and @ board name
         allwriter = "none"
         hiddenboardList = []
         for b in boardList:
@@ -53,15 +73,25 @@ def viewmain():
         else:
             if board.find('@') == 0:
                 allwriter = "initial"
+        #-------------! and @ board name
 
         headver = newdb.head[board][0]# .json script version.
 
         artistList = newdb.artistList[board]
         characterList = newdb.characterList[board]
         unitDict = newdb.unitDict[board]
-    return render_template('rocketbox.html', boardList=boardList, board = board, headver = headver,
+
+        sitename = newdb.sitename
+        announce = newdb.announce
+        keywords = newdb.keywords
+    return render_template('rocketbox.html',
+    sitename =sitename,
+    announce =announce,
+    keywords =keywords,
+    boardList=boardList, board = board, headver = headver,
     hiddenboardList=hiddenboardList, allwriter=allwriter,
-    artistList=artistList, characterList=characterList, unitDict=unitDict )
+    artistList=artistList, characterList=characterList, unitDict=unitDict,
+    boxid=boxid)
 
 @app.route('/taginput')
 def taginput():
@@ -181,8 +211,19 @@ def fetchbodytext():
     time = datestr()
     newdb.add_view(board,no, time, 'noname')#fine view ++ button may abuse.
 
+    recomN  = len(newdb.db[board][no][newdb.recom_key])
+    likeN   = len(newdb.db[board][no][newdb.like_key])
+    viewN   = len(newdb.db[board][no][newdb.view_key])
+    commN   = len(newdb.db[board][no][newdb.comm_key])
+    tagN    = len(newdb.db[board][no][newdb.tag_key])
 
-    data = { 'bodytext':valueText }
+    data = { 'bodytext':valueText,
+    "recomN":recomN,
+    "likeN":likeN,
+    "viewN":viewN,
+    "commN":commN,
+    "tagN":tagN,
+     }
     return jsonify(data)
 
 
@@ -576,12 +617,54 @@ def xmltext():
 # def parent():
 #     return render_template('htmlparent.html')
 
-@app.route('/son', methods=['GET', 'POST'])
-def son():
-    a={}
-    a['age']=3
-    return render_template('son.html' , ob=a)
 
+@app.route('/allnewboard', methods=['GET', 'POST'])
+def allnewboard():
+    sitename = newdb.sitename
+    announce = newdb.announce
+    keywords = newdb.keywords
+    tagauthval = userdb.tagauthval
+    return render_template('allnewboard.html', sitename=sitename,announce=announce,keywords=keywords,tagauthval=tagauthval)
+
+@app.route('/tagauth', methods=['GET', 'POST'])
+def tagauth():
+    if request.method == 'POST':
+        token = request.form['token']
+        username = userdb.getname(token)
+        if username == "noname":
+            return "you can not make it!"
+        if userdb.ismanager(username) or userdb.ismaster(username):
+            pass
+        else:
+            return "noauth"
+
+        tagauth = request.form['tagauth']
+        if tagauth == "user":
+            userdb.settagauth('user')
+        elif tagauth == "manager":
+            userdb.settagauth('manager')
+
+        return 'well done!'
+        #return render_template('newboard.html')
+
+@app.route('/createsite', methods=['GET', 'POST'])
+def createsite():
+    if request.method == 'POST':
+        token = request.form['token']
+        username = userdb.getname(token)
+        if username == "noname":
+            return "you can not make it!"
+        if userdb.ismanager(username) or userdb.ismaster(username):
+            pass
+        else:
+            return "noauth"
+
+        newdb.sitename = request.form['sitename']
+        newdb.announce = request.form['announce']
+        newdb.keywords = request.form['keywords']
+        newdb.backup()
+        return 'well done!'
+        #return render_template('newboard.html')
 
 @app.route('/newboard', methods=['GET', 'POST'])
 def newboard():
@@ -1075,6 +1158,33 @@ def subimgs(id):
 #def getpreventset():
 #    newdb.db[board][id]
 
+@app.route('/boardorder' )
+def boardorder():
+    boardList = getboardlist()
+    return render_template('boardorder.html' , boardList = boardList)
+
+@app.route('/boardup' ,methods = ["POST"])
+def boardup():
+    board = request.form['board']
+    token = request.form['token']
+
+    username = userdb.getname(token)
+    if username == "noname":
+        return "you can not make it!"
+    #if userdb.ismanager(username) or userdb.ismaster(username):
+    #only master can del!
+    if userdb.ismaster(username):
+        pass
+    else:
+        return "noauth"
+
+    if board in newdb.boardorder:
+        newdb.boardorder.pop( newdb.boardorder.index(board) )
+    newdb.boardorder.append(board)
+    newdb.backup()
+    return "done"
+
+
 @app.route('/delboard' )
 def delboard():
     boardList = list(newdb.db.keys())
@@ -1313,8 +1423,11 @@ def xmltag():
     id = request.form['id']
     token = request.form['token']
     username = userdb.getname(token)
+
     if username == "noname":
         return "noname"
+    if not userdb.tagauthcheck(username):
+        return "noauth"
 
     time = datestr()
     key = newdb.tag_key

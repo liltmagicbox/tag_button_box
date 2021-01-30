@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="kr" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>new board!</title>
+  </head>
+  <body>
+    <div id="loginbox">
+
+    </div>
+
+    ---처음 시작시, 계정을 생성해주세요. 처음 생성되는 계정은 관리자 권한이 부여 됩니다.<br><br>
+    그리고 사이트의 제목, 소개문구, 검색 키워드를 입력 해 주세요.<br>
+    제목: 탭에 보이는 사이트 제목<br>
+    소개 문구: 사이트 설명 문구.<br>
+    검색 키워드: 검색어 키워드.<br>
+    <br>
+
+    <form class="createsite" action="/createsite" method="post">
+      <input id="token" type="text" name="token" hidden = True ><br>
+
+       제목: <input  id="sitename" type="text" name="sitename" value ={{sitename}}><br>
+       소개문구: <input  id="announce" type="text" name="announce" value ={{announce}} ><br>
+       검색키워드: <input  id="keywords" type="text" name="keywords" value ={{keywords}} ><br>
+      <button id="submitB" type="submit" name="button" >등록</button>
+    </form>
+
+    <br>
+    <hr>
+
+    이하 필요시 전체 관리 기능 <br><br>
+    태그입력권한변경- 현재값:{{tagauthval}} <br>
+    <form class="tagauth" action="/tagauth" method="post">
+      <select id = "tagauth" name="tagauth" required>
+       <option value= "manager"> manager </option>
+       <option value= "user"> user </option>
+      </select>
+      <button id="submitB" type="submit" name="button" >등록</button>
+    </form>
+
+  </body>
+
+  <script type="text/javascript" src="/static/js/shasha.js"> </script>
+  <script type="text/javascript" src="/static/js/userfunc.js"> </script>
+
+    <script type="text/javascript">
+      frame = document.getElementById("loginbox")
+      makeloginbox(frame)
+    </script>
+
+    <script type="text/javascript">
+    filltoken()
+
+    </script>
+
+
+</html>

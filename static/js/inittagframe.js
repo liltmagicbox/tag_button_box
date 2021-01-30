@@ -47,7 +47,7 @@ function loadUsertag(tagFrame,pre_userTagdict){
   }).forEach(function(key){
     userTagdict[key]=pre_userTagdict[key]
   })
-  console.log(userTagdict)
+  //console.log(userTagdict)
   tagFrame.innerHTML =""
 
   //global var characterList by html maker... also unitList
@@ -90,6 +90,7 @@ function loadUsertag(tagFrame,pre_userTagdict){
   makebigThrebar(utildiv)
   maketagshowbar(utildiv)
   tagFrame.appendChild(utildiv)
+  gettagshowtext()
 }
 
 
@@ -164,7 +165,7 @@ function maketagshowbar(tagFrame){
   tagB.id = 'tagshowbar'
   tagB.min = "0"
   tagB.max = lala-csl
-  tagB.setAttribute('value',15)
+  tagB.setAttribute('value',30)
   //value jnot working
   //tagB.oninput = 'getNewbigguy(this.value)'
   tagB.addEventListener('input', gettagshowtext )
@@ -185,7 +186,7 @@ function maketagshowbar(tagFrame){
 }
 function gettagshowtext(){
   var tex = document.getElementById('tagshowtext')
-  var shownumber = event.currentTarget.value
+  var shownumber = document.getElementById('tagshowbar').value
   tex.innerHTML = shownumber
 
   var bs = document.getElementsByClassName('tagB')

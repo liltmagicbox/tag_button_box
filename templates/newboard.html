@@ -9,10 +9,12 @@
 
     </div>
 
-    --- 게시판이름이 !로 시작하면 비공개, @면 누구나글쓰기됨<br>
-    예) !내부공지, @아무나게시판---<br>
+    --- 게시판이름이 !로 시작하면 비공개 게시판. 예) !내부공지<br>
+    --- 게시판이름이 @로 시작하면 누구나 글 쓰기 가능 예)@아무나게시판<br>
+    <br>
+    게시판이름에 띄어쓰기가 포함되면 _로 교체됩니다.<br>
     - \ / : * ? " < > | 는 다른 문자로 변환됩니다-<br>
-    %%%%%게시판이름에 띄어쓰기가 포함되면 _로 바뀝니다.<br>
+
     <form class="newboard" action="/createboard" method="post">
       <input id="token" type="text" name="token" hidden = True ><br>
 
@@ -28,7 +30,7 @@
       <button id="submitB" type="submit" name="button" >등록</button>
     </form>
 
-    처음 게시판을 만든 뒤엔, 게시판태그 에서 게시판용 기본 배너를 추가 해 주세요.<br>
+    게시판을 만든 뒤엔, 게시판태그 에서 게시판용 기본 배너를 추가 해 주세요.<br>
   </body>
 
   <script type="text/javascript" src="/static/js/shasha.js"> </script>

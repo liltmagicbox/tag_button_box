@@ -66,7 +66,7 @@ fetch(fetchurl,
   let userlevel = myJson['userlevel']
   let token = myJson['token']
   if(token=='no'){
-    alert('뭔가 문제가..!')
+    //alert('로그인 실패!')
     return false
   }
   else{

@@ -9,9 +9,11 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Expires" content="0">
 
-    <title>러브라이브 번역 만화</title>
-    <meta name="description" content="러브라이브 번역 만화 및 기타 열람.">
-    <meta name="keywords" content="러브라이브,식질,만화,2차창작,번역">
+
+
+    <title>{{sitename}}</title>
+    <meta name="description" content="{{announce}}">
+    <meta name="keywords" content="{{keywords}}">
 
     <link rel="stylesheet" type="text/css" href="/static/css/flexcol.css">
     <link rel="stylesheet" type="text/css" href="/static/css/charcolor_{{board}}.css">
@@ -71,10 +73,12 @@
         <a href="/articleboarduser">@에쓴글</a>
 
         <a href="/manageboard" class="managermenu" style="display : none">게시판 태그</a>
-        <a href="/articleboard" class="managermenu" style="display : none">게시판 열람</a>
-        <a href="/newboard" class="managermenu" style="display : none">새 게시판</a>
-        <a href="/delboard" class="managermenu" style="display : none">삭제 게시판 </a>
-        <a href="/assignuser" class="managermenu" style="display : none">계정 권한</a>
+        <a href="/articleboard" class="managermenu" style="display : none">게시판 상세</a>
+        <a href="/newboard" class="managermenu" style="display : none">게시판추가</a>
+        <a href="/delboard" class="managermenu" style="display : none">게시판삭제 </a>
+        <a href="/boardorder" class="managermenu" style="display : none">게시판순서 </a>
+        <a href="/assignuser" class="managermenu" style="display : none">계정 관리</a>
+        <a href="/allnewboard" class="managermenu" style="display : none">사이트설명</a>
         <a class="managermenu" >x</a>
 
 
@@ -143,7 +147,7 @@
 
 
     <footer id='foot'>
-      <p> 2020 lovelive gallery </p>
+      <p> 2021 {{sitename}} </p>
     </footer>
 
     <script type="text/javascript">
@@ -227,9 +231,9 @@
     <script type="text/javascript">
     initTagframe()
     initSortB()
-    initColB()
+    initColB("{{boxid}}")
     //initImgframe()
-    initImgcol()
+    initImgcol("{{boxid}}")
     //finally, console.log(Object.keys(datas))
     //setTimeout(function(){}, 100)
 

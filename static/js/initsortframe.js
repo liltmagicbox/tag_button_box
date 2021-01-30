@@ -1,4 +1,8 @@
-function initColB(){
+function initColB(boxid){
+  var defaultcolnumber = 2
+  if(boxid!="no"){
+    defaultcolnumber = 1
+  }
   let sortFrame = 'sortFrame'
   frame = document.getElementById(sortFrame)
 
@@ -13,7 +17,7 @@ function initColB(){
   colNumber.id = "colNumber"//it should remained, by this is global one.
   colNumber.className = "colNumber"
   colNumber.name = "colNumber"
-  colNumber.value = 2
+  colNumber.value = defaultcolnumber
   colNumber.style.display ="None"
   frame.appendChild(colNumber)
 

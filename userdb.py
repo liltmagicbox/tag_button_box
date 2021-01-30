@@ -36,11 +36,13 @@ def newuser(username,sha):
         #user[username] = { "sha" : shasha(sha+salt) ,"token":shasha(username+tsalt), "salt" : salt ,  "tsalt" : tsalt  }
         user[username] = { "sha" : shasha(sha+salt) ,"token":shasha(username+tsalt), "salt" : salt , }
         tokens[ user[username]["token"] ] = username
-        backup()
+
         #for 1st.
         if len(user)==1:
             masters.append(username)
             managers.append(username)
+
+        backup()
         return 'new account!'
     else:
         return 'username already exist..'
@@ -74,6 +76,24 @@ def getname(token):
         return tokens[token]#username
     else:
         return 'noname'
+
+tagauthval = "manager"
+def settagauth(value):
+    global tagauthval
+    tagauthval = value
+    backup()
+
+def tagauthcheck(name):
+    global tagauthval
+    if tagauthval == "user":
+        tagauthlist = list(user.keys())
+    elif tagauthval == "manager":
+        tagauthlist = managers
+    return name in tagauthlist
+
+
+
+
 
 masters = []
 managers = []

@@ -15,10 +15,15 @@ function initImgframe(outFrameid = 'imgFrame'){
 }
 
 
-function initImgcol(){
+function initImgcol(boxid){
+
 
   //noList = keys(datas)
   viewList = Object.keys(datas)
+
+  if(boxid!="no"){
+    viewList = [boxid]
+  }
 
   let colNum = getColnum()
   let outFrame = getImgframe()

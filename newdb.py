@@ -121,11 +121,23 @@ def newboard(name):
         return True
     return False
 
+boardorder=[]
+sitename = 'site'
+announce = 'ann'
+keywords = 'keyword'
 def backup():
     #saveJson(db,"db.json")
     # global db
     # global taginfo
-    tmp ={"unitC":unitC,"charC":charC,"artistList":artistList,"characterList":characterList,"unitDict":unitDict, "db":db}
+    tmp ={
+    "boardorder" : boardorder,
+    "sitename" : sitename,
+    "announce" : announce,
+    "keywords" : keywords,
+    "unitC":unitC,"charC":charC,
+    "artistList":artistList,"characterList":characterList,
+    "unitDict":unitDict,
+    "db":db}
     saveJson(tmp,"data.json")
 
     boardList = list( db.keys() )
@@ -134,21 +146,30 @@ def backup():
     return True
 
 def backdown():
-    global db
+    data = loadJson("data.json")
     #db = loadJson("db.json")
+    global db
+    db = data["db"]
+
     global artistList
     global characterList
     global unitDict
     global charC
     global unitC
-    data = loadJson("data.json")
-    db = data["db"]
-
     artistList = data["artistList"]
     characterList = data["characterList"]
     unitDict = data["unitDict"]
     charC = data["charC"]
     unitC = data["unitC"]
+
+    global sitename
+    global announce
+    global keywords
+    sitename = data["sitename"]
+    announce = data["announce"]
+    keywords = data["keywords"]
+    global boardorder
+    boardorder = data["boardorder"]
 
     boardList = list( db.keys() )
     for board in boardList:

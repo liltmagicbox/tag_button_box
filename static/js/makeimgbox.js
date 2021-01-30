@@ -139,7 +139,12 @@ function makeImgbox(datas, no, outFrame,boxColor=0,miniLoad = 0){
   downB.addEventListener('click', function(e){eventDownload(box.no, box.board)} )
   box.appendChild(downB)
 
-
+  let linkB = document.createElement('button')
+  linkB.type = 'button' // if want submit, change. see mdn button
+  linkB.className = 'linkB'
+  linkB.innerText = '링크'
+  linkB.addEventListener('click', function(e){eventGetlink(box.no, box.board)} )
+  box.appendChild(linkB)
 
 
   if( getCookie("userlevel")=="manager"){
@@ -401,7 +406,7 @@ function eventBodyload(event){
     videosource.type = "video/mp4"
     videoview.appendChild(videosource)
 
-    console.log(videoview)
+    //console.log(videoview)
     imgArea.appendChild(videoview)
     }
   }
@@ -433,6 +438,12 @@ function eventBodyload(event){
 
     //console.log( myJson['bodytext'] )
     let rawText = myJson['bodytext']
+
+    let recomN = myJson['recomN']
+    let likeN = myJson['likeN']
+    let viewN = myJson['viewN']
+    let commN = myJson['commN']
+    let tagN = myJson['tagN']
 
 
 
@@ -519,6 +530,34 @@ function eventBodyload(event){
 
     window.scroll(0, scrollYbeforeloadbody )
     //console.log(document.documentElement.scrollTop,'after')
+
+
+
+    //button.remove()//now change button.fine! if remove, scroll Y confuse.
+    button.removeEventListener('click',eventBodyload )
+    button.innerText = '위로'
+    //window.removeEventListener('scroll', oldScrollY)
+    button.addEventListener('click',scrollup )
+
+
+    //finally xml buttons.
+    box.appendChild( document.createElement("hr") )
+
+
+    addrecomB(box,no,board,recomN)
+    addlikeB(box,no,board,likeN)
+    addviewB(box,no,board,viewN)
+
+    addcommarea(box,no,board,commN)
+    addtagarea(box,no,board,tagN)
+    // addrecomB(box,no,board)
+    // addlikeB(box,no,board)
+    // addviewB(box,no,board)
+    //
+    // addcommarea(box,no,board)
+    // addtagarea(box,no,board)
+
+    //-------ends fetch
   })
 
 
@@ -528,24 +567,7 @@ function eventBodyload(event){
   //bodyLoad(box)
   //console.log(box);
 
-  //button.remove()//now change button.fine! if remove, scroll Y confuse.
-  button.removeEventListener('click',eventBodyload )
-  button.innerText = '위로'
-  //window.removeEventListener('scroll', oldScrollY)
 
-  button.addEventListener('click',scrollup )
-
-
-  //finally xml buttons.
-  box.appendChild( document.createElement("hr") )
-
-  addrecomB(box,no,board)
-  addlikeB(box,no,board)
-  addviewB(box,no,board)
-
-  addcommarea(box,no,board)
-
-  addtagarea(box,no,board)
 
 }
 
@@ -554,24 +576,24 @@ function scrollup(){
 }
 
 
-function addviewB(box,no,board){
+function addviewB(box,no,board,n){
   let recomB = document.createElement('button')
   recomB.type = 'button'
   recomB.className = 'viewB'
   recomB.classList.add( 'loadB' )
-  recomB.innerText = '조회'
+  recomB.innerText = '조회(n)'.replace('n',n)
   recomB.value = "0"
   recomB.no = no
   recomB.board= board
 
-  recomB.addEventListener('click', function(e){xmlviewB(recomB)} )
+  //recomB.addEventListener('click', function(e){xmlviewB(recomB)} )
   box.appendChild(recomB)
 }
-function addrecomB(box,no,board){
+function addrecomB(box,no,board,n){
   let recomB = document.createElement('button')
   recomB.type = 'button'
   recomB.className = 'recomB'
-  recomB.innerText = '추천'
+  recomB.innerText = '추천(n)'.replace('n',n)
   recomB.value = "0"
   recomB.no = no
   recomB.board= board
@@ -583,11 +605,11 @@ function addrecomB(box,no,board){
   recomB.addEventListener('click', function(e){xmlrecomB(recomB)} )
   box.appendChild(recomB)
 }
-function addlikeB(box,no,board){
+function addlikeB(box,no,board,n){
   let likeB = document.createElement('button')
   likeB.type = 'button'
   likeB.className = 'likeB'
-  likeB.innerText = '좋아'
+  likeB.innerText = '좋아(n)'.replace('n',n)
   likeB.value = "0"
   likeB.no = no
   likeB.board= board
@@ -609,7 +631,10 @@ function xmlviewB(recomB){
 
   xhr.addEventListener("load", function(event){
     let response = event.srcElement.responseText
-    if( response<9999 ){recomB.innerText= "조회("+response+")"}
+    if( response<9999 ){
+      recomB.innerText= "조회("+response+")"
+      //recomB.disabled = true
+    }
   } )
 
   let id = recomB.no
@@ -670,11 +695,11 @@ function xmllikeB(likeB){
 
 
 
-function addcommloadB(box,no,board){
+function addcommloadB(box,no,board,n){
   let commloadB = document.createElement('button')
   commloadB.type = 'button'
   commloadB.className = 'commloadB'
-  commloadB.innerText = '로드'
+  commloadB.innerText = '로드(n)'.replace('n',n)
   commloadB.no = no
   commloadB.board= board
   commloadB.value = 0
@@ -765,7 +790,7 @@ function fetchcommloadB(commloadB){
 
 
 
-function addcommarea(box,no,board){
+function addcommarea(box,no,board,n){
   let commarea = document.createElement('div')
   commarea.className = "commarea"
 
@@ -801,7 +826,7 @@ function addcommarea(box,no,board){
 
   commarea.appendChild(commsend)
 
-  addcommloadB(commarea,no,board)
+  addcommloadB(commarea,no,board,n)
 
   box.appendChild(commarea)
 }
@@ -841,7 +866,7 @@ function xmlcommsend(no,board,text,comminput){
 
 
 
-function addtagarea(box,no,board){
+function addtagarea(box,no,board,n){
     let commarea = document.createElement('div')
     commarea.className = "tagarea"
     commarea.appendChild(document.createElement('br'))
@@ -876,7 +901,7 @@ function addtagarea(box,no,board){
 
     commarea.appendChild(commsend)
 
-    addtagloadB(commarea,no,board)
+    addtagloadB(commarea,no,board,n)
 
     box.appendChild(commarea)
   }
@@ -890,6 +915,7 @@ function xmltagsend(no,board,text,comminput){
     xhr.addEventListener("load", function(event){
       let response = event.srcElement.responseText
       if( response == "noname"){alert("로그인 하세요!")}
+      if( response == "noauth"){alert("권한이 없습니다..")}
       //if( response == "value1"){likeB.value="1"; likeB.innerText="추천함";}
       //if( response == "value0"){likeB.value="0"; likeB.innerText="추천";}
       if( response == "done" ){
@@ -909,11 +935,11 @@ function xmltagsend(no,board,text,comminput){
 
 
 
-  function addtagloadB(box,no,board){
+  function addtagloadB(box,no,board,n){
     let commloadB = document.createElement('button')
     commloadB.type = 'button'
     commloadB.className = 'tagloadB'
-    commloadB.innerText = '로드'
+    commloadB.innerText = '로드(n)'.replace('n',n)
     commloadB.no = no
     commloadB.board= board
     commloadB.value = 0
@@ -1000,6 +1026,22 @@ function xmltagsend(no,board,text,comminput){
   //   formData.append("token", token)
   //   xhr.send(formData)
   // }
+
+
+  function eventGetlink(id, board){
+    var obj = document.createElement("input")
+    var origin = window.location.origin
+    obj.value = origin+"/view?board=boardname&boxid=boxidval".replace('boardname',board).replace('boxidval',id)
+    var boxid = "imgBox_id".replace('id',id)
+    var box = document.getElementById(boxid)
+    box.appendChild(obj)
+    obj.select()
+    obj.setSelectionRange(0, 99999);
+    document.execCommand("copy")
+    obj.hidden = true//clever!
+    alert('복사완료!')
+  }
+
 
   function eventDownloadzip(id, board){
     if(confirm("글의사본을다운로드?")==false){
