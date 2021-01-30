@@ -257,6 +257,8 @@ def fetchtag():
     username = userdb.getname(token)
     if username == "noname":
         abort(403)#403 Forbidden
+    if not userdb.tagauthcheck(username):
+        abort(403)
 
     time = datestr()
     key = newdb.tag_key

@@ -483,6 +483,7 @@ function sendsend(){
     }
   )
   .then( function(response){
+    if(response.status==403){alert('권한이없습니다')}
     tagdone[idx]= taglist.toString()
 
 

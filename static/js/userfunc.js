@@ -136,6 +136,10 @@ setTimeout("filltoken()", 1000)
 else{
 let userbox = document.getElementById("token")
 userbox.value = token
+let tokenboxs = document.getElementsByClassName("token")
+for(var box of tokenboxs){
+  box.value = token
+  }
 }
 
 }

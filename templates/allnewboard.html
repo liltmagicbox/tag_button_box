@@ -31,6 +31,8 @@
     이하 필요시 전체 관리 기능 <br><br>
     태그입력권한변경- 현재값:{{tagauthval}} <br>
     <form class="tagauth" action="/tagauth" method="post">
+      <input class="token" type="text" name="token" hidden = True ><br>
+
       <select id = "tagauth" name="tagauth" required>
        <option value= "manager"> manager </option>
        <option value= "user"> user </option>
