@@ -218,7 +218,7 @@ function overLayview(){
   overviewer.addEventListener('click',overoff )
   //for mobile back button.
   history.pushState(null, document.title, location.href)
-  window.addEventListener('popstate', function(event) { overviewer.remove() } )
+  window.addEventListener('popstate', function(event) { document.body.classList.remove("stop_scroll");overviewer.remove(); } )
   //document.body.append
   document.body.appendChild(overviewer)
   //box.appendChild(overviewer)
