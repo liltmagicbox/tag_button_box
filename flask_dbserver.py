@@ -2,7 +2,7 @@
 
 from os import listdir, mkdir, rename, remove, makedirs, walk
 from os.path import isfile, join, splitext, isdir, getsize
-from shutil import rmtree,copy#remove not work if filled.rmtree(tempdir)
+from shutil import disk_usage,rmtree,copy#remove not work if filled.rmtree(tempdir)
 
 from jar import getJar, imgtower_dir, jar_dir
 import newdb
@@ -17,7 +17,14 @@ app = Flask(__name__)
 
 from tidyname import tidyName
 
-
+#import platform
+#if platform.system()=="Windows":
+def get_freespace():
+    a,b,c = disk_usage('/')
+    total = a/1024/1024//1024
+    used = b/1024/1024//1024
+    free = c/1024/1024//1024
+    return "total:{}GB,used:{}GB,free:{}GB".format(total,used,free)
 
 @app.route('/')
 def hello():
@@ -1565,14 +1572,36 @@ def likeview():
                     idList.append( id )
         return jsonify(idList)
 
+from getossize import getdirsize
 
-# @app.route('/backup')
-# def backup():
-#     newdb.backup()
-#     return "yeah"
+@app.route('/backup')
+def backup():
+    targetdir3 = join('static','imgtower')
+    imgtowersize = getdirsize(targetdir3)
+    imgtowersize = "imgtower size : "+imgtowersize
+    freespace = get_freespace()
+    return render_template('backup.html',freespace=freespace,imgtowersize=imgtowersize)
 
-@app.route('/backupdown', methods=['POST',"GET"])
-def backupdown():
+@app.route('/dbdown', methods=['POST'])
+def dbdown():
+    #if request.method == 'POST':
+
+    target = request.form['target']
+    token = request.form['token']
+    #board = request.form['board']
+    username = userdb.getname(token)
+    if userdb.ismanager(username) or userdb.ismaster(username):
+        pass
+    else:
+    #if username == "noname":
+        abort(403)#403 Forbidden
+    #data = { 'uploadkey': uploadkey, 'msg':msg }
+    #return jsonify(data)
+
+    newdb.backup()#simple,good.
+    userdb.backup()
+
+
     zipfiledir = join('static',"backupzip")
     makedirs(zipfiledir, exist_ok=True)
     for pastz in listdir(zipfiledir):
@@ -1584,24 +1613,62 @@ def backupdown():
     zipname = '{}.zip'.format(millisec())
     zipdir = join(zipfiledir,zipname)
 
-    with zipfileuni.ZipFile(zipdir, 'w') as zip:
-        fname = "data.json"
-        zip.write( fname,fname )
-        fname = "userdb.json"
-        zip.write( fname,fname )
+    #NORMAL BACKUP- WITHOUT IMGTOWER!
+    if target == "db":
+        with zipfileuni.ZipFile(zipdir, 'w') as zip:
+            fname = "data.json"
+            zip.write( fname,fname )
+            fname = "userdb.json"
+            zip.write( fname,fname )
 
-        targetdir1 = join('static','css')
-        targetdir2 = join('static','banner')
-        targetdir3 = join('static','imgtower')
-        targetdirs = [targetdir1,targetdir2,targetdir3]
-        for targetdir in targetdirs:
-            for folder, subfolders, files in walk(targetdir):
-                for file in files:
-                    #if file.endswith('.pdf'):
-                    zip.write(join(folder, file), join(folder,file) )
+            targetdir1 = join('static','css')
+            targetdir2 = join('static','banner')
+            targetdir3 = join('static','resource')
+            #targetdir3 = join('static','imgtower')
+            targetdirs = [targetdir1,targetdir2,targetdir3]
+            for targetdir in targetdirs:
+                for folder, subfolders, files in walk(targetdir):
+                    for file in files:
+                        #if file.endswith('.pdf'):
+                        zip.write(join(folder, file), join(folder,file) )
+        #return zipfiledir
+        return send_file( filename_or_fp = zipdir ,as_attachment = True, attachment_filename="db_"+datestr()+'.zip')
+    if target == "imgtower":
+        targetdir = join('static','imgtower')
+        imgtowersize = getdirsize(targetdir)
+        #splitter = int(imgtowersize/3500)+1
 
-    #return zipfiledir
-    return send_file( filename_or_fp = zipdir ,as_attachment = True, attachment_filename=datestr()+'.zip')
+        zipdirs = []
+
+        currenti=0
+
+        zipname = '{}.zip'.format(millisec())
+        zipdir = join(zipfiledir,zipname)
+        zipdirs.append(zipdir)
+
+        zipsize = 0
+        zip =zipfileuni.ZipFile(zipdirs[currenti], 'w')
+        for folder, subfolders, files in walk(targetdir):
+            for file in files:
+                zip.write(join(folder, file), join(folder,file) )
+                #print(getsize(file))
+                zipsize += getsize(join(folder, file))//1024#kb
+                #print(zipsize)
+                if zipsize>3500000:#kb 3500000
+                    zipsize=0
+                    zip.close()
+                    currenti+=1
+                    zipname = '{}.zip'.format(millisec())
+                    zipdir = join(zipfiledir,zipname)
+                    zipdirs.append(zipdir)
+                    zip =zipfileuni.ZipFile(zipdirs[currenti], 'w')
+        tmphtml=""
+        for enu,i in enumerate(zipdirs):
+            tmphtml+='<a href="/{}">{}</a>'.format(i,i)
+            tmphtml+="<br>"
+        return str(tmphtml)
+        #return send_file( filename_or_fp = zipdir ,as_attachment = True, attachment_filename="imgtower_"+datestr()+'.zip')
+
 
 #-------------------downalod origin dir. img+txt
 @app.route('/xmldownzip', methods=['POST'])

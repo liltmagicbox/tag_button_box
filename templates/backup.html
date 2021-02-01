@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="kr" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>백업하기</title>
+  </head>
+  <body>
+
+    <div id="loginbox">
+
+    </div>
+
+    <p>현재 사용중인{{imgtowersize}}</p>
+
+    <p>{{freespace}} ..ㅋfree는imgtower보다작아야.</p>
+
+    <form class="" action="/dbdown" method="post">
+      <input id="token" type="text" name="token" hidden = True ><br>
+      <button id="backupgoB" type="submit" hidden>백업보내기</button>
+
+      백업한걸 다운할종류를선택하세요..둘다해야합니다.<br>
+      <select id = "target" name="target" required>
+        <option value= "db">db </option>
+        <option value= "imgtower"> imgtower </option>
+      </select>
+      <button id="clickB" type="button">백업한걸다운하기</button>
+    </form>
+
+
+
+  </body>
+  <script type="text/javascript">
+    document.getElementById("clickB").addEventListener("click", function(){
+      let ma = confirm("백업다운합니다")
+      if(ma){
+      document.getElementById("backupgoB").click()
+    }
+    } )
+  </script>
+
+  <script type="text/javascript" src="/static/js/shasha.js"> </script>
+  <script type="text/javascript" src="/static/js/userfunc.js"> </script>
+
+    <script type="text/javascript">
+      frame = document.getElementById("loginbox")
+      makeloginbox(frame)
+      filltoken()
+    </script>
+
+</html>
