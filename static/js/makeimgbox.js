@@ -413,6 +413,71 @@ function eventBodyload(event){
     imgArea.appendChild(videoview)
     }
   }
+  //audio
+  if( datas[no]['오디오'] != undefined ){
+
+    var ii=0
+    for(var audio of datas[no]['오디오'] ){
+    let audioview = document.createElement('audio')
+    //audioview.setAttribute('width','100%')
+    //audioview.height = 270
+    audioview.controls = true
+    audioview.className = "audio_"+no
+    audioview.loop = true
+    audioview.playno = ii
+    audioview.volume=0.5
+    ii+=1
+
+    let audiosource = document.createElement('source')
+    audiosource.src = '/static/imgtower/'+no+"/"+audio
+    audiosource.type = "audio/mpeg"
+    audioview.appendChild(audiosource)
+
+    //console.log(audioview)
+    imgArea.appendChild(audioview)
+    }
+
+    //var audios = document.getElementsByClassName("audio_"+no)
+    //var i=0 THIS COULDMT MAKE IT!!!!!!!!!! BECAME GLOBAL, LASTS FOREVER, LIVE.
+    //for (const [i, v] of ['a', 'b', 'c'].entries()) {
+    //for(const [i,aa] of audios.entries()){
+    // for(var aud of audios){
+    //   aud.addEventListener('ended',function(e){
+    //     var audios = document.getElementsByClassName("audio_"+no)
+    //     e.currentTarget.playno
+    //   })
+    // }
+
+    //-----------------------------
+    let loopB = document.createElement('button')
+    loopB.innerText='모아재생'
+    loopB.addEventListener('click',function(e){
+      var audios = document.getElementsByClassName("audio_"+no)
+      audios[0].play()
+      if(audios.length!=1){
+          for(var aa of audios){
+            aa.loop=false
+            if(aa.playno+1==audios.length){
+              aa.addEventListener('ended',function(e){
+                audios[e.currentTarget.playno+1].currentTime=0
+                audios[0].play() })
+            }
+            else{
+              aa.addEventListener('ended',function(e){
+                audios[e.currentTarget.playno+1].currentTime=0
+                audios[e.currentTarget.playno+1].play() })
+            }
+          }
+      }
+
+    })
+
+    imgArea.appendChild(loopB)
+    //-----------------------------
+    // let allplayB = document.createElement('button')
+    // allplayB.innerText='전체재생'
+    // allplayB.addEventListener('click',playall)
+  }
 
 
   let bodyText = document.createElement('pre')
@@ -572,6 +637,17 @@ function eventBodyload(event){
 
 
 
+}
+
+
+class audioplayer{
+  constructor() {
+    console.log('audioclass made')
+    self.playnow=0
+    self.audios=[]
+  }
+  add(aud){ self.audios.push(aud)}
+  play(){1}
 }
 
 function scrollup(){

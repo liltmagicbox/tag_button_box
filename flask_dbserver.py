@@ -147,20 +147,20 @@ def taginput():
         unitDict = newdb.unitDict[board]
     return render_template('highspeedtag.html' , board = board, headver = headver, boardList=boardList, characterList=characterList, unitDict=unitDict)
 
-@app.route('/server_info')
-def hello_json():
-    data = {'server_name' : '0.0.0.0', 'server_port' : '8080'}
-    return jsonify(data)
+# @app.route('/server_info')
+# def hello_json():
+#     data = {'server_name' : '0.0.0.0', 'server_port' : '8080'}
+#     return jsonify(data)
 
 
 
 
-@app.route('/jarscan')
-def jarScan():
-    global datas
-    no = backupDatas(datas)
-    datas = minidb.jarScan(datas)
-    return "backup no:"+str(no)+'jarscan after:'+str(len(datas))
+# @app.route('/jarscan')
+# def jarScan():
+#     global datas
+#     no = backupDatas(datas)
+#     datas = minidb.jarScan(datas)
+#     return "backup no:"+str(no)+'jarscan after:'+str(len(datas))
 
 # @app.route('/file/<path:filenameinput>', methods=['GET', 'POST'])
 # def download(filenameinput):
@@ -575,7 +575,7 @@ def xmliterimg():
     f = request.files['file']
     #js cuts 20MB, but if 100MB comes, can't block!
     # pointer gose end, cant save img!
-    if 'mp4' in f.filename:
+    if 'mp4' in f.filename or 'mp3' in f.filename:
         1
     else:
         blob = f.read()
@@ -599,7 +599,7 @@ def xmliterimg():
 
     ext = splitext(f.filename)[1]
     sname =  iter+ext
-    #sname = secure_filename(f.filename)
+    #sname = iter+secure_filename(f.filename)+ext#temp test #japanese all cut.
     filepath = join(unzipdir,sname)
     jaraddtime(7)#5 to 7.. if 10mb.
     f.save( filepath )

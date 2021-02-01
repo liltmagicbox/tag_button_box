@@ -39,12 +39,15 @@ imgKeys = [originkey,resizedkey,thumbkey]
 multiLineKey = body_key#for txt2dict
 
 video_key = '비디오'
+audio_key = '오디오'
 #----------------------- user funcion variable
 
 maxMB=20# >20MB, del.
-safeext = {'.jpg','.jpeg','.png','.gif','.webp','.bmp','.txt', '.jfif','.mp4','.mkv'}
-videoext = {'.mp4','.mkv'}
+safeext = {'.jpg','.jpeg','.png','.gif','.webp','.bmp','.txt', '.jfif', '.mp4','.mkv', '.mp3'}
 
+videoext = {'.mp4','.mkv'}
+audioext = {'.mp3'}
+massext = {'.mp4','.mkv','.mp3'}
 
 msgemptyjar = 'empty jar_dir'
 msgdirdir = "dir in dir.. deleted dir."
@@ -131,7 +134,7 @@ def getJar(preventSet={}):
                     remove( fdir )
                     errlist.append( "{}:,{},{}".format(datestr(),fdir,msgnotsafe) )
                     continue
-                if ext.lower() not in videoext and getsize(fdir)//1024//1024 > maxMB:
+                if ext.lower() not in massext and getsize(fdir)//1024//1024 > maxMB:
                     remove( fdir )
                     errlist.append( "{}:,{},{}".format(datestr(),fdir,msgtoolarge) )
 
@@ -168,8 +171,15 @@ def getJar(preventSet={}):
                 if ext.lower() in videoext:
                     vidfiles.append(f)
             parsedDict[video_key] = vidfiles
-
             #------------------video attached.!
+            #and audio
+            audiofiles = []
+            for f in listdir( noDir ):
+                name,ext = splitext(f)
+                if ext.lower() in audioext:
+                    audiofiles.append(f)
+            parsedDict[audio_key] = audiofiles
+            #------------------------------------
 
             #resizer. create imgs, get imglist.
             resizedlist, elist = resizeDir(noDir,imgname = parsedDict[id_key] )#0 origin 1 re 2 thumb.
