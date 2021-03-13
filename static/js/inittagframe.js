@@ -212,7 +212,7 @@ function resetBigguy(){//as reset..failed. for reset, simply, click.
 
 function getNewtext(){//as reset..failed. for reset, simply, click.
   var tex = document.getElementById('bigThretext')
-  var tex.innerHTML = event.currentTarget.value
+  tex.innerHTML = event.currentTarget.value
   //setBigguy( parseInt(event.currentTarget.value) )
   setBigguy()
 }
