@@ -91,6 +91,7 @@ function loadUsertag(tagFrame,pre_userTagdict){
   maketagshowbar(utildiv)
   tagFrame.appendChild(utildiv)
   gettagshowtext()
+  setBigguy()
 }
 
 
@@ -98,7 +99,7 @@ function makeResetB(tagFrame){
   let tagB = document.createElement('button')
   tagB.type = 'button' // if want submit, change. see mdn button
   tagB.className = 'tagResetB'
-  tagB.innerText = '리셋'
+  tagB.innerText = '태그초기화'
   tagB.addEventListener('click',tagBReset )
   tagFrame.appendChild(tagB)
 }
@@ -210,8 +211,8 @@ function resetBigguy(){//as reset..failed. for reset, simply, click.
 }*/
 
 function getNewtext(){//as reset..failed. for reset, simply, click.
-  tex = document.getElementById('bigThretext')
-  tex.innerHTML = event.currentTarget.value
+  var tex = document.getElementById('bigThretext')
+  var tex.innerHTML = event.currentTarget.value
   //setBigguy( parseInt(event.currentTarget.value) )
   setBigguy()
 }
@@ -233,6 +234,10 @@ function setBigguy(){
 
 
 function makeviewListN(tagFrame){
+  let boxnow = document.createElement('span')
+  boxnow.innerText = "글 수:"
+  tagFrame.appendChild(boxnow)
+
   let viewListN = document.createElement('span')
   viewListN.className = 'viewListN'
   viewListN.id = 'viewListN'
