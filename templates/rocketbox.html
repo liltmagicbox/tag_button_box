@@ -259,16 +259,27 @@
 
 
     function searchPop() {
+      let searchdebug = false
+
       let sign = window.prompt("검색할 제목?").toUpperCase() /*, "생일" 냅두면초기화용.*/
       if(sign == null ){sign = ""}
+       console.log("=======",'search',sign)
 
       let keyList = Object.keys(datas)
       let searchList =[]
       for(var k of keyList){
-        if( datas[k]['제목'].indexOf(sign) != -1){
+        let searchidx = datas[k]['제목'].toUpperCase().indexOf(sign)
+
+        if( searchidx != -1){
+          if(searchdebug){console.log(datas[k]['제목'],sign, searchidx)}
           searchList.push(k)
         }
+
       }
+      if(searchdebug){console.log(searchList)}
+      pagenum = 1
+
+
         let rB = document.getElementsByClassName('tagResetB')
         if(rB.length!=0){rB.click()}
         //document.getElementsByClassName('tagResetB')[0].click()
