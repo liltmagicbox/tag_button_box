@@ -431,7 +431,9 @@ function eventBodyload(event){
     }
   }
   //audio
-  if( datas[no]['오디오'] != undefined && datas[no]['오디오'].length != 0){
+  if( Object.keys(datas[no]).includes('오디오') ){
+  if(datas[no]['오디오'].length != 0){
+  /*if( datas[no]['오디오'] != undefined && datas[no]['오디오'].length == 0){*/
 
     var ii=0
     for(var audio of datas[no]['오디오'] ){
@@ -495,7 +497,7 @@ function eventBodyload(event){
     // let allplayB = document.createElement('button')
     // allplayB.innerText='전체재생'
     // allplayB.addEventListener('click',playall)
-  }
+  }}
 
 
   let bodyText = document.createElement('pre')
