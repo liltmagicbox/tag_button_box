@@ -1374,9 +1374,11 @@ def xmlrecomlike():
     if username == "noname":
         #return str(len(newdb.db[board][id][dbkey]))
         #익명
-        1
-        username = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-        #return "noname"
+        if key == "like":
+            return "noname"
+        else:
+            username = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+
     time = datestr()
     # if newdb.press_recom( board, id, time, username) == 1:
     #     return "value1"
