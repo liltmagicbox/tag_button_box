@@ -1,5 +1,5 @@
 function initColB(boxid){
-  var defaultcolnumber = 2
+  var defaultcolnumber = 1
   if(boxid!="no"){
     defaultcolnumber = 1
   }
