@@ -116,6 +116,11 @@ function makeImgbox(datas, no, outFrame,boxColor=0,miniLoad = 0){
   im.addEventListener('click', overLayview)
   imgArea.appendChild(im)
 
+  /*bodytextbox holder*/
+  let bodytextbox = document.createElement('div')
+  bodytextbox.className='bodytextbox'
+  box.appendChild(bodytextbox)
+
   // 더보기버튼이다, 누르면 더 로드된다. 스크롤처리하느라 고심함.
   let bodyB = document.createElement('button')
   bodyB.type = 'button' // if want submit, change. see mdn button
@@ -136,6 +141,7 @@ function makeImgbox(datas, no, outFrame,boxColor=0,miniLoad = 0){
   downB.type = 'button' // if want submit, change. see mdn button
   downB.className = 'downB'
   downB.innerText = '다운'
+  downB.setAttribute("tabindex","-1")
   downB.addEventListener('click', function(e){eventDownload(box.no, box.board)} )
   box.appendChild(downB)
 
@@ -143,6 +149,7 @@ function makeImgbox(datas, no, outFrame,boxColor=0,miniLoad = 0){
   linkB.type = 'button' // if want submit, change. see mdn button
   linkB.className = 'linkB'
   linkB.innerText = '링크'
+  linkB.setAttribute("tabindex","-1")
   linkB.addEventListener('click', function(e){eventGetlink(box.no, box.board)} )
   box.appendChild(linkB)
 
@@ -153,6 +160,7 @@ function makeImgbox(datas, no, outFrame,boxColor=0,miniLoad = 0){
     zipdownB.type = 'button' // if want submit, change. see mdn button
     zipdownB.className = 'zipdownB'
     zipdownB.innerText = 'zip다운'
+    zipdownB.setAttribute("tabindex","-1")
     zipdownB.addEventListener('click', function(e){eventDownloadzip(box.no, box.board)} )
     box.appendChild(zipdownB)
 
@@ -160,6 +168,7 @@ function makeImgbox(datas, no, outFrame,boxColor=0,miniLoad = 0){
     delB.type = 'button' // if want submit, change. see mdn button
     delB.className = 'delB'
     delB.innerText = '글삭제'
+    delB.setAttribute("tabindex","-1")
     delB.addEventListener('click', function(e){
       if(confirm("글을 삭제합니다?")==true){
         1
@@ -175,6 +184,7 @@ function makeImgbox(datas, no, outFrame,boxColor=0,miniLoad = 0){
     modB.type = 'button' // if want submit, change. see mdn button
     modB.className = 'modB'
     modB.innerText = '제목수정'
+    modB.setAttribute("tabindex","-1")
     modB.addEventListener('click', function(e){
       let token = getCookie("token")
       //xmldelarticle(board,no,token)
@@ -291,8 +301,15 @@ function overLayview(){
       for( var u of urls){
         //linkalt = u.slice(u.indexOf('//')+2,25)+'...'
         let linkalt = u
-        bodyText.innerHTML += linkalt.link(u)+'\n'+'\n'
+        /*bodyText.innerHTML += linkalt.link(u)+'\n'+'\n'*/
+        let ulink = document.createElement('a')
+        ulink.innerHTML = u+'<br>'
+        ulink.href = u
+        ulink.target='_blank'
+        ulink.setAttribute('tabindex','-1')
+        bodyText.appendChild(ulink)
       }
+
       let rawText2 = rawText
     for( var u of urls){
       //bodyText.innerHTML += rawText.slice(rawText.lastIndexOf(urls[urls.length-1])+urls[urls.length-1].length+1)
@@ -414,7 +431,7 @@ function eventBodyload(event){
     }
   }
   //audio
-  if( datas[no]['오디오'] != undefined ){
+  if( datas[no]['오디오'] != undefined && datas[no]['오디오'].length != 0){
 
     var ii=0
     for(var audio of datas[no]['오디오'] ){
@@ -451,6 +468,7 @@ function eventBodyload(event){
     //-----------------------------
     let loopB = document.createElement('button')
     loopB.innerText='모아재생'
+    /*loopB.setAttribute('tabindex','-1') nah we need all of players lol*/
     loopB.addEventListener('click',function(e){
       var audios = document.getElementsByClassName("audio_"+no)
       audios[0].play()
@@ -482,7 +500,8 @@ function eventBodyload(event){
 
   let bodyText = document.createElement('pre')
   bodyText.innerHTML += "<br><br>"
-  box.appendChild(bodyText)
+  let bodytextbox = box.getElementsByClassName('bodytextbox')[0]
+  bodytextbox.appendChild(bodyText)
   //bodyText.width = imgArea.clientWidth
   //box.appendChild(bodyText) why you here?!
 
@@ -560,7 +579,18 @@ function eventBodyload(event){
         //linkalt = u.slice(u.indexOf('//')+2,25)+'...'
         //let linkalt = '링크'
         let linkalt = u
-        bodyText.innerHTML += linkalt.link(u)+'\n'+'\n'
+        /*bodyText.innerHTML += linkalt.link(u)+'\n'+'\n'*/
+        let ulink = document.createElement('a')
+        ulink.innerHTML = u+'<br>'
+        ulink.href = u
+        ulink.target='_blank'
+        ulink.setAttribute('tabindex','-1')
+        /*function newtabopen(url){
+          window.open(url)
+        }
+        */
+        /*ulink.addEventListener('click',function(e){ window.open(u)} )*/
+        bodyText.appendChild(ulink)
       }
 
 
@@ -604,6 +634,7 @@ function eventBodyload(event){
     //button.remove()//now change button.fine! if remove, scroll Y confuse.
     button.removeEventListener('click',eventBodyload )
     button.innerText = '위로'
+    button.setAttribute("tabindex","-1")
     //window.removeEventListener('scroll', oldScrollY)
     button.addEventListener('click',scrollup )
 
@@ -661,6 +692,7 @@ function addviewB(box,no,board,n){
   recomB.className = 'viewB'
   recomB.classList.add( 'loadB' )
   recomB.innerText = '조회(n)'.replace('n',n)
+  recomB.setAttribute("tabindex","-1")
   recomB.value = "0"
   recomB.no = no
   recomB.board= board
@@ -673,6 +705,7 @@ function addrecomB(box,no,board,n){
   recomB.type = 'button'
   recomB.className = 'recomB'
   recomB.innerText = '추천(n)'.replace('n',n)
+  recomB.setAttribute("tabindex","-1")
   recomB.value = "0"
   recomB.no = no
   recomB.board= board
@@ -689,6 +722,7 @@ function addlikeB(box,no,board,n){
   likeB.type = 'button'
   likeB.className = 'likeB'
   likeB.innerText = '좋아(n)'.replace('n',n)
+  likeB.setAttribute("tabindex","-1")
   likeB.value = "0"
   likeB.no = no
   likeB.board= board
@@ -782,6 +816,7 @@ function addcommloadB(box,no,board,n){
   commloadB.no = no
   commloadB.board= board
   commloadB.value = 0
+  commloadB.setAttribute("tabindex","-1")
 
   //commloadB.id = "commloadB_"+no
   //commloadB.name = ""
@@ -883,8 +918,10 @@ function addcommarea(box,no,board,n){
   let comminput = document.createElement('input')
   comminput.type = "text"
   comminput.size = "15"
-  comminput.maxlength = "80"
   comminput.placeholder = "댓글쓰기"
+  /*comminput.maxlength = "80"*/
+  comminput.setAttribute("maxlength","300")
+  comminput.setAttribute("tabindex","-1")
 
   comminput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
@@ -897,6 +934,7 @@ function addcommarea(box,no,board,n){
   commsend.type = "button"
   commsend.className = 'commsendB'
   commsend.innerText = "등록"
+  commsend.setAttribute("tabindex","-1")
 
   commsend.addEventListener('click', function(e){
     let text = comminput.value
@@ -958,8 +996,9 @@ function addtagarea(box,no,board,n){
     let comminput = document.createElement('input')
     comminput.type = "text"
     comminput.size = "15"
-    comminput.maxlength = "80"
     comminput.placeholder = "태그추가"
+    comminput.setAttribute("tabindex","-1")
+    comminput.setAttribute("maxlength","80")
 
     comminput.addEventListener('keypress', function (e) {
       if (e.key === 'Enter') {
@@ -972,6 +1011,7 @@ function addtagarea(box,no,board,n){
     commsend.type = "button"
     commsend.className = 'tagsendB'
     commsend.innerText = "등록"
+    commsend.setAttribute("tabindex","-1")
 
     commsend.addEventListener('click', function(e){
       let text = comminput.value
@@ -1022,6 +1062,7 @@ function xmltagsend(no,board,text,comminput){
     commloadB.no = no
     commloadB.board= board
     commloadB.value = 0
+    commloadB.setAttribute("tabindex","-1")
 
     //commloadB.id = "commloadB_"+no
     //commloadB.name = ""

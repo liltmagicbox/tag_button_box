@@ -11,8 +11,9 @@
     <form action="/newuser" method="post">
       <span>닉네임 : </span><input type="text" id= "username" name="username" placeholder="수상한마키" maxlength="20"><br>
       <span>비밀의주문 : </span><input type="text" id= "sha" name="sha" placeholder="니코니코니"><br>
-      <p>비밀의주문은 SHA256 암호화가 적용됩니다만,</p>
+      <p>비밀의주문은 SHA256 암호화가 적용되긴하지만,</p>
       <p>안전을 위해 다른 사이트에서 쓰는 비밀번호 대신 적당한 문구를 입력해주세요.</p>
+      <p>크롬 브라우저에서는 자동완성이 됩니다.</p>
       <!--span>data : </span><input type="text" name="data"><br-->
       <button id = 'fetchnewuserB' type="button" formmethod="POST">생성</button>
     </form>
