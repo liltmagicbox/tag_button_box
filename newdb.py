@@ -121,6 +121,7 @@ def newboard(name):
         return True
     return False
 
+viewer = 0
 boardorder=[]
 sitename = 'site'
 description = 'description'
@@ -130,6 +131,7 @@ def backup():
     # global db
     # global taginfo
     tmp ={
+    "viewer":viewer,
     "boardorder" : boardorder,
     "sitename" : sitename,
     "description" : description,
@@ -174,6 +176,10 @@ def backdown():
     boardList = list( db.keys() )
     for board in boardList:
         headcheck(board)
+
+    global viewer
+    viewer = data["viewer"]
+
     return True
 
 #time may be defaulted. if need, it will be updated.
@@ -440,8 +446,10 @@ except:
 
 
 
-
-
+viewer = 0
+def viewerup():
+    global viewer
+    viewer+=1
 
 
 #

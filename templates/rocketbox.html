@@ -55,8 +55,12 @@
 
     <div class="menuHolder" >
       <div class="sideMenu" id="sideMenu">
+
+        <span class="hatbar">-누적방문수: {{viewer}}</span>
+        
         <button type="button" id = "menuCloseB" class="menuCloseB" name="button">&times;</button>
-        <br><br>
+        <br>
+
         <ul>
           {% for board in boardList %}
           <li><a href="?board={{board}}" title="{{board}}">{{board}}</a></li>
@@ -80,7 +84,8 @@
         <a href="/assignuser" class="managermenu" style="display : none">계정 관리</a>
         <a href="/allnewboard" class="managermenu" style="display : none">사이트관리</a>
         <a href="/backup" class="managermenu" style="display : none">백업</a>
-        <a class="managermenu" >x</a>
+        <!--a class="managermenu" >x</a-->
+
 
 
       </div>

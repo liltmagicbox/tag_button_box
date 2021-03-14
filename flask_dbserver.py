@@ -79,6 +79,8 @@ def getboardlist():
 def viewmain():
     backupcheck()
     if request.method == "GET":
+        viewerip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+        viewerup(viewerip)
         board = request.args.get('board')
 
         boxid = request.args.get('boxid')
@@ -124,7 +126,9 @@ def viewmain():
         keywords = newdb.keywords
         if boxid != "no":
             sitename = newdb.db[board][boxid][newdb.title_key]
+    #get ip and save as visitor counter in newdb.
     return render_template('rocketbox.html',
+    viewer = newdb.viewer,
     sitename =sitename,
     description =description,
     keywords =keywords,
@@ -610,6 +614,7 @@ def xmltext():
     board = request.form['board']
     #uploader = request.form['username']
     bodytext = request.form['bodytext']
+    bodytext=bodytext[:300000] #found 60000 length txt..
 
     upload_key = request.form['upload_key']
     #print(upload_key) #note that if same tab, fast clicked, it fails. by new key.
@@ -1395,6 +1400,7 @@ def xmlview():
 def xmlcomm():
 
     text = request.form['text']
+    text = text[:100000]#atleast safe..
     board = request.form['board']
     id = request.form['id']
     token = request.form['token']
@@ -1461,6 +1467,7 @@ def fetchcommload():
 def xmltag():
 
     text = request.form['text']
+    text = text[:300]
     board = request.form['board']
     id = request.form['id']
     token = request.form['token']
@@ -1745,7 +1752,18 @@ def getPlotCSV():
         headers={"Content-disposition":
                  "attachment; filename=myplot.csv"})
 
+lastviewerip = '1'
+def viewerup(viewerip):
+    global lastviewerip
+    if viewerip != lastviewerip:
+        lastviewerip = viewerip
+        newdb.viewerup()
 
+# class viewermanager:
+#     def __init__(self):
+#         self.last_ip = "1"
+#     def viewup(self):
+#         newdb.viewerup()
 
 def backupcheck():
     tnow = intsec()
