@@ -75,8 +75,23 @@ def getboardlist():
             return -1
     return sorted( boardList, key= listorder, reverse = True)
 
+@app.route('/analysis')
+def analysis():
+    try:
+        with open('visitor.txt','r',encoding='utf-8') as f:
+            lili = f.readlines()
+            a=''
+            for i in lili:
+                a+=i
+                a+='<br>'
+            return a
+    except:
+        return 'can not load!'
+
 @app.route('/view')
 def viewmain():
+    if dayman.isnewday():
+        newdb.daily_save(daystr())
     backupcheck()
     if request.method == "GET":
         viewerip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
@@ -340,7 +355,7 @@ def clearjar():
     pass
 
 #----------------------upload
-from timemaker import millisec, datestr, intsec, datestrstamp, daystr
+from timemaker import millisec, datestr, intsec, datestrstamp, daystr, dayman
 from uuid import uuid4
 #-------lock jar.
 # user, time, remainT, key(secret)

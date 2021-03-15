@@ -104,7 +104,7 @@ def deltaginfo(board):
 # "天翔幻獣",
 # "黒潮",]
 #---------------------------------
-
+viewer = [0,0,0]
 
 db={}
 
@@ -121,7 +121,6 @@ def newboard(name):
         return True
     return False
 
-viewer = 0
 boardorder=[]
 sitename = 'site'
 description = 'description'
@@ -445,12 +444,20 @@ except:
 
 
 
-
-viewer = 0
+#---------------viewer counter
+#daily_record is not backuped.. txt is simple.
 def viewerup():
     global viewer
-    viewer+=1
+    viewer[0]+=1
+    viewer[2]+=1
 
+def daily_save(daystring):
+    global viewer
+    with open('visitor.txt','a',encoding='utf-8') as f:
+        f.write(daystring+','+str(viewer)+'\n')
+    viewer[2] += viewer[0]
+    viewer[1] = viewer[0]
+    viewer[0] = 0
 
 #
 # from dhexmaker import dhexstr, dhex3
