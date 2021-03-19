@@ -90,8 +90,9 @@ def analysis():
 
 @app.route('/view')
 def viewmain():
-    if dayman.isnewday():
-        newdb.daily_save(daystr())
+    isnewday, yesterday = dayman.isnewday()
+    if isnewday:
+        newdb.daily_save(yesterday)
     backupcheck()
     if request.method == "GET":
         viewerip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)

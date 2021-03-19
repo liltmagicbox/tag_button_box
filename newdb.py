@@ -454,8 +454,8 @@ def viewerup():
 def daily_save(daystring):
     global viewer
     with open('visitor.txt','a',encoding='utf-8') as f:
-        f.write(daystring+','+str(viewer)+'\n')
-    viewer[2] += viewer[0]
+        f.write(daystring+','+str(viewer[0])+','+str(viewer[2])+'\n')
+    #viewer[2] = viewer[2]
     viewer[1] = viewer[0]
     viewer[0] = 0
 

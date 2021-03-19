@@ -36,10 +36,11 @@ class dayholder:
     def isnewday(self):
         daynow = time.localtime().tm_mday
         if not self.dayint == daynow:
+            yesterday = self.dayint
             self.dayint = daynow
-            return True
+            return True,yesterday
         else:
-            return False
+            return False,''
 dayman = dayholder()
 
 #datetime.datetime.utcfromtimestamp(1606644954)
