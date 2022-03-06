@@ -247,7 +247,7 @@ function overLayview(){
 
   box = innerviewer
   //let no= preimg.parentElement.id.split('_')[1]
-  console.log(preimg)
+  //console.log(preimg)
   let before_id = preimg.parentElement.id.indexOf('_')
   let no = preimg.parentElement.id.slice(before_id+1)
   let board = preimg.parentElement.parentElement.board
@@ -332,7 +332,7 @@ function overLayview(){
 overclickn = 0
 function overoff(){
   overclickn +=1
-  setTimeout( function(){overclickn=0}, 700)//350 for doubleclick. 500 for triple
+  setTimeout( function(){overclickn=0}, 250)//350 for doubleclick. 500 for triple
 
   if(overclickn >1){//2 to triple
     overclickn=0
