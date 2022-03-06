@@ -1785,9 +1785,11 @@ def viewerup(viewerip):
 
 def backupcheck():
     tnow = intsec()
-    if tnow - newdb.lastbackuptime>3600:
-        newdb.lastbackuptime = tnow
-        newdb.backup()
+    if tnow - newdb.lastbackuptime>372000:#was3600. now 4days.
+       newdb.lastbackuptime = tnow
+       newdb.backup()
+    #print(tnow)#1646596187 1646596253 seems seconds.
+    #3600 1H, 20H 72000. 200h not bad? hope if changed, backuped. afternewarticle calls backup.
 
 def xmlbackup():
     newdb.lastbackuptime = intsec()
@@ -1796,3 +1798,11 @@ def xmlbackup():
 
 if __name__ == "__main__":
     app.run(debug = True, host='0.0.0.0' , port = '12800')
+
+#-----------change log starting..
+# 2022 03 07 we moved from material_viewer.
+# assume this version is mp4, incogwrite, ..anyway newest one.
+# we change update _ most bad
+# and https connect.
+# maybe js just changes it's url.. though it not https, we can link url.fine.
+# 514am we update /4day
