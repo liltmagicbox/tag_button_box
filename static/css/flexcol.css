@@ -99,6 +99,8 @@ border-radius: 50%;
 }
 .innerviewer pre{
   white-space:pre-wrap;
+  font-size: large;
+  text-align: left;
 }
 .innerviewer{
   color:white;
@@ -116,7 +118,8 @@ border-radius: 50%;
   top: 0;
   left: 0;*/
   transition: 0.3s;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: clip;
 }
 
 
@@ -583,6 +586,10 @@ nav ul li a{
     width: 100%; //of outer size. if not, img fullsize.
   }
 /*---------------    imgbox   ----------------------*/
+.imgBox .bodytextbox pre p{
+  font-size: large;
+}
+
 
 .moreloadbutton{
   width: 100px;
