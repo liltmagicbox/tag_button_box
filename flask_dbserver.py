@@ -142,6 +142,9 @@ def viewmain():
         keywords = newdb.keywords
         if boxid != "no":
             sitename = newdb.db[board][boxid][newdb.title_key]
+    else:
+        print(request.method,'whatshappening')
+        print(request.args,'args')
     #get ip and save as visitor counter in newdb.
     return render_template('rocketbox.html',
     viewer = newdb.viewer,

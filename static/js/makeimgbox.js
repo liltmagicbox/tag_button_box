@@ -120,7 +120,8 @@ function makeImgbox(datas, no, outFrame,boxColor=0,miniLoad = 0){
   let bodytextbox = document.createElement('div')
   bodytextbox.className='bodytextbox'
   box.appendChild(bodytextbox)
-
+  
+  if(miniLoad==0){
   // 더보기버튼이다, 누르면 더 로드된다. 스크롤처리하느라 고심함.
   let bodyB = document.createElement('button')
   bodyB.type = 'button' // if want submit, change. see mdn button
@@ -152,7 +153,7 @@ function makeImgbox(datas, no, outFrame,boxColor=0,miniLoad = 0){
   linkB.setAttribute("tabindex","-1")
   linkB.addEventListener('click', function(e){eventGetlink(box.no, box.board)} )
   box.appendChild(linkB)
-
+  }
 
   if( getCookie("userlevel")=="manager"){
 
