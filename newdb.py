@@ -454,7 +454,13 @@ def viewerup():
 def daily_save(daystring):
     global viewer
     with open('visitor.txt','a',encoding='utf-8') as f:
-        f.write(daystring+','+str(viewer[0])+','+str(viewer[2])+'\n')
+        #2022.03.14,13,3472
+        year = time.localtime().tm_year
+        month = str(time.localtime().tm_mon).zfill(2)
+        day = str(daystring).zfill(2)
+        line = f"{year}.{month}.{day},{viewer[0]},{viewer[2]}\n"
+        f.write(line)
+        #f.write(daystring+','+str(viewer[0])+','+str(viewer[2])+'\n')
     #viewer[2] = viewer[2]
     viewer[1] = viewer[0]
     viewer[0] = 0
