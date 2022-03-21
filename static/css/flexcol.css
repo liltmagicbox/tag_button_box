@@ -569,6 +569,11 @@ nav ul li a{
     text-overflow: ellipsis;
     width: 20px;*/
   }
+  .imgTitle[cut='1']{
+    font-size : 0.9rem;
+    height: 36px;
+    overflow: hidden;
+  }
   .imgTitle[shrink='0']{
     overflow: visible;
   }

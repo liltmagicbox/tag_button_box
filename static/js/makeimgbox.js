@@ -95,7 +95,8 @@ function makeImgbox(datas, no, outFrame,boxColor=0,miniLoad = 0){
   box.board = board
   box.setAttribute('color', boxColor)
 
-  let title = document.createElement('h2')
+  let title = document.createElement('h2')  
+  title.setAttribute('cut',miniLoad)
   title.className = "imgTitle"
   title.innerText = titleText
   box.appendChild(title)
