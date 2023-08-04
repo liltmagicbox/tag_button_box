@@ -1,0 +1,4 @@
+
+.imgBox [type='button']{
+  display: none;
+}
