@@ -1,5 +1,29 @@
 "prevent #-*- coding:utf-8 -*-"
 
+
+#https://stackoverflow.com/questions/6234405/logging-uncaught-exceptions-in-python
+import sys
+import logging
+logging.basicConfig(filename='errorlog.log',level = logging.INFO)
+
+logger = logging.getLogger(__name__)
+handler = logging.StreamHandler(stream=sys.stdout)
+logger.addHandler(handler)
+
+def handle_exception(exc_type, exc_value, exc_traceback):
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+
+    logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+
+sys.excepthook = handle_exception
+
+
+
+
+
+
 from os import listdir, mkdir, rename, remove, makedirs, walk
 from os.path import isfile, join, splitext, isdir, getsize
 from shutil import disk_usage,rmtree,copy#remove not work if filled.rmtree(tempdir)
