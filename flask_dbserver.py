@@ -20,7 +20,9 @@ def handle_exception(exc_type, exc_value, exc_traceback):
 sys.excepthook = handle_exception
 
 
-
+def fileprint(*args):
+    with open('fileprint.txt','a',encoding='utf-8') as f:
+        f.write(str(args))
 
 
 
@@ -167,8 +169,8 @@ def viewmain():
         if boxid != "no":
             sitename = newdb.db[board][boxid][newdb.title_key]
     else:
-        print(request.method,'whatshappening')
-        print(request.args,'args')
+        fileprint(request.method,request.args)
+        return
     #get ip and save as visitor counter in newdb.
     return render_template('rocketbox.html',
     viewer = newdb.viewer,
