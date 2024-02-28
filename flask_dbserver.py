@@ -1727,6 +1727,7 @@ def dbdown():
 #-------------------downalod origin dir. img+txt
 @app.route('/xmldownzip', methods=['POST'])
 def xmldownzip():
+    return "closed: due to db size"
     board = request.form['board']
     id = request.form['id']
     imgkey = newdb.originkey
@@ -1762,6 +1763,7 @@ def xmldownlist():
         imgkey = newdb.originkey
     else:
         imgkey = newdb.resizedkey
+    imgkey = newdb.resizedkey
 
     files = newdb.db[board][id][imgkey]
     s=""
@@ -1782,6 +1784,7 @@ def multidown():
         imgdir = "origin"
     else:
         imgdir = "resized"
+    imgdir = "resized"
 
     filepath = join(imgtower_dir,id,imgdir,file)
     filename = newdb.db[board][id][newdb.title_key][:10] + splitext(filepath)[1]
