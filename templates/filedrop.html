@@ -561,7 +561,7 @@ function imgextcheck(file) {
   return ["image/jpeg","image/gif","image/png","image/bmp","image/webp"].includes( file.type )
 }
 function videoextcheck(file) {
-  return ['video/mp4','video/mkv', 'audio/mpeg'].includes( file.type )//mkv no.
+  return ['video/mp4','video/x-matroska', 'audio/mpeg'].includes( file.type )//mkv no.
 }
 
 
@@ -591,7 +591,7 @@ function previewFile(file,i) {
   if(imgextcheck(file) == false && videoextcheck(file) == false){console.log("not img/vid file!");return "not img/vid file!"}//msg cant see
 
   if(imgextcheck(file) == true && fileheavycheck(file,20) == false){console.log("too heavy image:");return "too heavy image:20MB"}
-  if(videoextcheck(file) == true && fileheavycheck(file,500) == false){alert("too heavy video:500MB");return "too heavy video:.5GB"}
+  if(videoextcheck(file) == true && fileheavycheck(file,6500) == false){alert("too heavy video:6500MB");return "too heavy video:6.5GB"}
   filelist.push(file)
   updateimglen()
 

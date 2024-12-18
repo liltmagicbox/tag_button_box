@@ -618,13 +618,14 @@ def zipfileup():
 
 #------------------------ post file upload.
 
-
+exts = ['mp4','mp3','mkv']
 @app.route("/xmliterimg", methods=['POST'])
 def xmliterimg():
     f = request.files['file']
+    print(dir(f))
     #js cuts 20MB, but if 100MB comes, can't block!
     # pointer gose end, cant save img!
-    if 'mp4' in f.filename or 'mp3' in f.filename:
+    if f.filename.split('.')[-1] in exts:
         1
     else:
         blob = f.read()
