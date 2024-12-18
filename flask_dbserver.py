@@ -64,10 +64,10 @@ def hello():
 
 @app.route('/robots.txt', methods=['GET', 'POST'])
 def robots():
-    return send_file( filename_or_fp = './static/robots.txt' )
+    return send_file(  './static/robots.txt' )
 @app.route('/sitemap.xml', methods=['GET', 'POST'])
 def sitemap():
-    #return send_file( filename_or_fp = './static/sitemap.xml' )
+    #return send_file(  './static/sitemap.xml' )
     realboardlist=[]
     boardList = list(newdb.db.keys())
     for board in boardList:
@@ -229,7 +229,7 @@ def staticFile(filenameinput):
     #디렉터리에서 파일을 보내는 함수라는것은 알겠어..
     #print('filenameinput',filenameinput)
     #return send_file( filename=filenameinput )
-    return send_file( filename_or_fp = filenameinput )
+    return send_file(  filenameinput )
     #http://localhost:12800/static/mah.txt로 접속시,staic폴더안에연결됨.ㅇㅋ
 
 
@@ -1686,7 +1686,7 @@ def dbdown():
                         #if file.endswith('.pdf'):
                         zip.write(join(folder, file), join(folder,file) )
         #return zipfiledir
-        return send_file( filename_or_fp = zipdir ,as_attachment = True, attachment_filename="db_"+datestr()+'.zip')
+        return send_file(  zipdir ,as_attachment = True, attachment_filename="db_"+datestr()+'.zip')
     if target == "imgtower":
         targetdir = join('static','imgtower')
         imgtowersize = getdirsize(targetdir)
@@ -1721,7 +1721,7 @@ def dbdown():
             tmphtml+='<a href="/{}">{}</a>'.format(i,i)
             tmphtml+="<br>"
         return str(tmphtml)
-        #return send_file( filename_or_fp = zipdir ,as_attachment = True, attachment_filename="imgtower_"+datestr()+'.zip')
+        #return send_file(  zipdir ,as_attachment = True, attachment_filename="imgtower_"+datestr()+'.zip')
 
 
 #-------------------downalod origin dir. img+txt
@@ -1788,7 +1788,7 @@ def multidown():
 
     filepath = join(imgtower_dir,id,imgdir,file)
     filename = newdb.db[board][id][newdb.title_key][:10] + splitext(filepath)[1]
-    return send_file( filename_or_fp = filepath ,as_attachment = True, attachment_filename=filename)
+    return send_file(  filepath ,as_attachment = True, attachment_filename=filename)
 
 
 @app.route("/getPlotCSV")
